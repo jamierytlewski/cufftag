@@ -122,7 +122,7 @@ extension ProtocolInitializationStateMachine {
 
         do {
           let response = try Google_Jacquard_Protocol_Response(
-            serializedData: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
+            serializedBytes: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
           self.handleEvent(.didReceiveResponse(response))
         } catch (let error) {
           self.handleEvent(.didReceiveResponseError(error))

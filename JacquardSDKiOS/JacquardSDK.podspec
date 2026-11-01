@@ -36,7 +36,7 @@ This SDK allows you to connect to your Jacquard jacket or backpack in your own i
   s.subspec 'Protobuf' do |proto|
     proto.source_files = 'JacquardSDK/Protobuf/*'
     proto.osx.source_files = 'JacquardSDK/Protobuf/*'
-    s.dependency 'SwiftProtobuf', '~> 1.0'
+    s.dependency 'SwiftProtobuf', '~> 1.39'
   end
 
   s.resources = 'JacquardSDK/Resources/*'

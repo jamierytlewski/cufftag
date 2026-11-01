@@ -42,6 +42,6 @@ extension NotificationParser {
 
   public func parseNotification(_ packet: Data) throws -> V2ProtocolNotificationInjectable {
     try Google_Jacquard_Protocol_Notification(
-      serializedData: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
+      serializedBytes: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
   }
 }

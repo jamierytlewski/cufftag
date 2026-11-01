@@ -1,0 +1,70 @@
+// Copyright 2021 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package google.jacquard.protocol.public.sdk;
+
+// Gear Capabilities ENUMERATION
+// This can be used to describe the capabilities of a piece of Gear.
+message GearMetadata {
+  // Gear capabilitiy options.
+  enum Capability {
+    // This gear can be used for `PlayLEDPatternCommand`.
+    LED = 0;
+
+    // This gear supports gestures. i.e`TouchMode.gesture`
+    GESTURE = 1;
+
+    // This gear supports touch data stream. i.e `TouchMode.touchDataStream`
+    TOUCH_DATA_STREAM = 2;
+
+    // This gear can be used for `PlayHapticCommand`.
+    HAPTIC = 3;
+  }
+
+  // This can be used to get configuration data for all vendors and it's
+  // associated products.
+  message GearData {
+    // Describes the properties of a connected product.
+    message Product {
+      // Product identifier.
+      string id = 1;
+
+      // Product name.
+      string name = 2;
+
+      // Product image.
+      string image = 3;
+
+      // Product capabilities.
+      repeated Capability capabilities = 4;
+    }
+
+    // Describes the properties of a gear vendor.
+    message Vendor {
+      // Vendor identifier.
+      string id = 1;
+
+      // Vendor name.
+      string name = 2;
+
+      // Vendor owned products.
+      repeated Product products = 3;
+    }
+
+    // Vendors of gear.
+    repeated Vendor vendors = 1;
+  }
+}

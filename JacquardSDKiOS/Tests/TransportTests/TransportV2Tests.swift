@@ -242,7 +242,7 @@ final class TransportV2Tests: XCTestCase {
       case .success(let packet):
         do {
           let response = try Google_Jacquard_Protocol_Response(
-            serializedData: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
+            serializedBytes: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
           XCTAssert(response.status == .ok)
         } catch (let error) {
           XCTFail("Error: \(error)")
@@ -316,7 +316,7 @@ final class TransportV2Tests: XCTestCase {
       case .success(let packet):
         do {
           let response = try Google_Jacquard_Protocol_Response(
-            serializedData: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
+            serializedBytes: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
           XCTAssert(response.status == .ok)
         } catch (let error) {
           XCTFail("Error: \(error)")
@@ -476,6 +476,6 @@ final class TransportV2Tests: XCTestCase {
 extension TransportV2Tests {
   func parseNotification(_ packet: Data) throws -> Google_Jacquard_Protocol_Notification {
     try Google_Jacquard_Protocol_Notification(
-      serializedData: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
+      serializedBytes: packet, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
   }
 }

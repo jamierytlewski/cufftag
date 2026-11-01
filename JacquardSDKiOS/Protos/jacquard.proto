@@ -1,0 +1,1101 @@
+// Copyright 2021 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto2";
+
+package google.jacquard.protocol;
+
+enum Status {
+  STATUS_OK = 0;
+  ERROR_UNSUPPORTED = 1;
+  ERROR_BADPARAM = 2;
+  ERROR_BATTERY = 3;
+  ERROR_HARDWARE = 4;
+  ERROR_AUTH = 5;
+  ERROR_DEVICE_TYPE_INFO = 6;
+  ERROR_INVALID_STATE = 7;
+  ERROR_FLASH_ACCESS = 8;
+  ERROR_CHECKSUM = 9;
+  ERROR_BUSY = 10;
+  ERROR_APP_TIMEOUT = 253;
+  ERROR_APP_UNKNOWN = 254;
+  ERROR_UNKNOWN = 255;
+}
+
+enum Domain {
+  BASE = 0;
+  DFU = 1;
+  BOUNCEBACK = 5;
+  DEVELOPER = 6;
+  GEAR = 8;
+  DATA_COLLECTION = 9;
+  MODULE = 10;
+}
+
+enum PatternType {
+  PATTERN_TYPE_NONE = 0;
+  PATTERN_TYPE_SOLID = 1;
+  PATTERN_TYPE_BREATHING = 2;
+  PATTERN_TYPE_PULSING = 3;
+  PATTERN_TYPE_SINGLE_BLINK = 4;
+  PATTERN_TYPE_DOUBLE_BLINK = 5;
+  PATTERN_TYPE_TRIPPLE_BLINK = 6;
+  PATTERN_TYPE_CUSTOM = 7;
+}
+
+enum LogLevel {
+  LOG_VERBOSE_LEVEL__OFF = 0;
+  LOG_VERBOSE_LEVEL__DEBUG = 1;
+  LOG_VERBOSE_LEVEL__ERROR = 2;
+  LOG_VERBOSE_LEVEL__IMPORTANT = 3;
+  LOG_VERBOSE_LEVEL__INFO = 4;
+  LOG_VERBOSE_LEVEL__DATA = 5;
+  LOG_VERBOSE_LEVEL__ALL = 6;
+}
+
+enum Opcode {
+  option allow_alias = true;
+  SUPPORTED = 0;
+  HELLO = 1;
+  BEGIN = 2;
+  DISCONNECT = 3;
+  DEVICEINFO = 4;
+  GESTURE = 5;
+  ACTIVITY = 6;
+  WEARSTATE = 7;
+  PATTERN = 8;
+  ATTACHED = 9;
+  CONFIG_READ = 10;
+  CONFIG_WRITE = 11;
+  METRICS = 14;
+  METRICS_NOTIFY = 15;
+  ERROR = 16;
+  LED_PATTERN = 17;
+  LOAD_MODULE = 18;
+  UNLOAD_MODULE = 19;
+  LIST_MODULES = 20;
+  DELETE_MODULE = 21;
+  BATTERY_STATUS = 23;
+  CONFIG_GET = 24;
+  CONFIG_SET = 25;
+  CONFIG_GET_INDEX = 26;
+  REQUEST_DISCONNECT = 27;
+  REQUEST_REBOOT = 28;
+  FAULTLOG_GET = 29;
+  FAULTLOG_CLEAR = 30;
+  HID_KEY_PATTERN = 31;
+  DFU_STATUS = 1;
+  DFU_PREPARE = 2;
+  DFU_WRITE = 3;
+  DFU_EXECUTE = 4;
+  CONSOLE_OUTPUT = 1;
+  CONSOLE_INPUT = 2;
+  CONSOLE_OPTIONS = 3;
+  GEAR_INFO = 4;
+  GEAR_TEST = 3;
+  GEAR_HWCHAR = 2;
+  GEAR_LED = 5;
+  GEAR_HAPTIC = 6;
+  GEAR_DATA = 7;
+  GEAR_BUFFER = 8;
+  GEAR_POWER = 9;
+  GEAR_ALWAYS_TOGETHER_CONFIG = 10;
+  DATA_COLLECTION_START = 1;
+  DATA_COLLECTION_STOP = 2;
+  DATA_COLLECTION_STATUS = 3;
+  DATA_COLLECTION_TRIAL_LIST = 4;
+  DATA_COLLECTION_TRIAL_DATA = 5;
+  DATA_COLLECTION_TRIAL_DATA_ERASE = 6;
+  DATA_COLLECTION_DATA_ERASE = 7;
+}
+
+enum PatternPlayType {
+  PLAY = 0;
+  TOGGLE = 1;
+}
+
+enum HapticSymbolType {
+  HAPTIC_SYMBOL_HALTED = 0;
+  HAPTIC_SYMBOL_SINE_INCREASE = 1;
+  HAPTIC_SYMBOL_SINE_DECREASE = 2;
+  HAPTIC_SYMBOL_LINEAR_INCREASE = 3;
+  HAPTIC_SYMBOL_LINEAR_DECREASE = 4;
+  HAPTIC_SYMBOL_PARABOLIC_INCREASE = 5;
+  HAPTIC_SYMBOL_PARABOLIC_DECREASE = 6;
+  HAPTIC_SYMBOL_CONST_ON = 7;
+}
+
+enum DataStreamState {
+  DATA_STREAM_DISABLE = 0;
+  DATA_STREAM_ENABLE = 1;
+  DATA_STREAM_NOT_SUPPORTED = 2;
+  DATA_STREAM_ENABLE_DETAILED = 3;
+}
+
+enum SKUMaterial {
+  SKUMaterial_Ribbon = 0;
+  SKUMaterial_Ripstop = 1;
+  SKUMaterial_Thread = 2;
+}
+
+enum LEDType {
+  LEDType_RGB = 0;
+  LEDType_SingleColor = 1;
+}
+
+enum LEDGeometry {
+  LEDGeometry_Linear = 0;
+  LEDGeometry_Circular = 2;
+  LEDGeometry_Ring_And_Center = 3;
+}
+
+enum ConnectorType {
+  ConnectorType_C_Clip = 0;
+  ConnectorType_O_Tub = 1;
+  ConnectorType_Y_Tub = 2;
+}
+
+enum OrientationType {
+  OrientationType_Normal = 0;
+  OrientationType_Flipped = 1;
+}
+
+enum HapticType {
+  HapticType_HALTED = 0;
+  HapticType_SINE_INCREASE = 1;
+  HapticType_SINE_DECREASE = 2;
+  HapticType_LINEAR_INCREASE = 3;
+  HapticType_LINEAR_DECREASE = 4;
+  HapticType_PARABOLIC_INCREASE = 5;
+  HapticType_PARABOLIC_DECREASE = 6;
+  HapticType_CONST_ON = 7;
+}
+
+enum UpdateSchedule {
+  UPDATE_NOW = 0;
+  UPDATE_LATER = 1;
+  UPDATE_WHEN_ATTACHED = 2;
+}
+
+enum GenericBlobMsgType {
+  GENERIC_MSGTYPE_ANCS_DS = 0;
+  GENERIC_MSGTYPE_ANCS_NS = 1;
+  GENERIC_MSGTYPE_AMS_EU = 2;
+  GENERIC_MSGTYPE_AMS_EA = 3;
+}
+
+enum DataCollectionStatus {
+  DATA_COLLECTION_IDLE = 0;
+  DATA_COLLECTION_LOGGING = 1;
+  DATA_COLLECTION_XFER_DATA = 2;
+  DATA_COLLECTION_ERASING_DATA = 3;
+  DATA_COLLECTION_ERROR_STATE = 4;
+  DATA_COLLECTION_INVALID_STATE = 5;
+  DATA_COLLECTION_LOW_STORAGE = 6;
+  DATA_COLLECTION_LOW_BATTERY = 7;
+  DATA_COLLECTION_IMU_CONFIG_READ_ERROR = 8;
+  DATA_COLLECTION_IMU_CONFIG_WRITE_ERROR = 9;
+  DATA_COLLECTION_IMU_SET_CALLBACK_ERROR = 10;
+  DATA_COLLECTION_IMU_ON_ERROR = 11;
+  DATA_COLLECTION_IMU_OFF_ERROR = 12;
+  DATA_COLLECTION_MKDIR_ERROR = 13;
+  DATA_COLLECTION_CHDIR_ERROR = 14;
+  DATA_COLLECTION_OPENDIR_ERROR = 15;
+  DATA_COLLECTION_READDIR_ERROR = 16;
+  DATA_COLLECTION_GETCWD_ERROR = 17;
+  DATA_COLLECTION_FOPEN_ERROR = 18;
+  DATA_COLLECTION_FWRITE_ERROR = 19;
+  DATA_COLLECTION_FREAD_ERROR = 20;
+  DATA_COLLECTION_FSEEK_ERROR = 21;
+  DATA_COLLECTION_FUNLINK_ERROR = 22;
+  DATA_COLLECTION_FGETFREE_ERROR = 23;
+  DATA_COLLECTION_BAD_FILE_FORMAT = 24;
+  DATA_COLLECTION_PBENCODE_ERROR = 25;
+  DATA_COLLECTION_PBDECODE_ERROR = 26;
+  DATA_COLLECTION_RAW_TX_ERROR = 27;
+  DATA_COLLECTION_GEAR_SET_CALLBACK_ERROR = 28;
+  DATA_COLLECTION_APP_SCHED_EVENT = 29;
+  DATA_COLLECTION_UNKNOWN = 30;
+}
+
+enum DataCollectionMode {
+  DATA_COLLECTION_MODE_STREAMING = 0;
+  DATA_COLLECTION_MODE_STORE = 1;
+  DATA_COLLECTION_MODE_STORE_FORWARD = 2;
+}
+
+enum ImuFilterMode {
+  IMU_FILTER_OSR4 = 0;
+  IMU_FILTER_OSR2 = 1;
+  IMU_FILTER_NORMAL = 2;
+}
+
+enum ImuAccelSampleRate {
+  ACCEL_ODR_0_78_HZ = 0;
+  ACCEL_ODR_1_56_HZ = 1;
+  ACCEL_ODR_3_12_HZ = 2;
+  ACCEL_ODR_6_25_HZ = 3;
+  ACCEL_ODR_12_5_HZ = 4;
+  ACCEL_ODR_25_HZ = 5;
+  ACCEL_ODR_50_HZ = 6;
+  ACCEL_ODR_100_HZ = 7;
+  ACCEL_ODR_200_HZ = 8;
+  ACCEL_ODR_400_HZ = 9;
+  ACCEL_ODR_800_HZ = 10;
+  ACCEL_ODR_1600_HZ = 11;
+}
+
+enum ImuGyroSampleRate {
+  GYRO_ODR_25_HZ = 0;
+  GYRO_ODR_50_HZ = 1;
+  GYRO_ODR_100_HZ = 2;
+  GYRO_ODR_200_HZ = 3;
+  GYRO_ODR_400_HZ = 4;
+  GYRO_ODR_800_HZ = 5;
+  GYRO_ODR_1600_HZ = 6;
+  GYRO_ODR_3200_HZ = 7;
+}
+
+enum ImuAccelRange {
+  IMU_ACCEL_RANGE_2G = 0;
+  IMU_ACCEL_RANGE_4G = 1;
+  IMU_ACCEL_RANGE_8G = 2;
+  IMU_ACCEL_RANGE_16G = 3;
+}
+
+enum ImuGyroRange {
+  IMU_GYRO_RANGE_125DPS = 0;
+  IMU_GYRO_RANGE_250DPS = 1;
+  IMU_GYRO_RANGE_500DPS = 2;
+  IMU_GYRO_RANGE_1000DPS = 3;
+  IMU_GYRO_RANGE_2000DPS = 4;
+}
+
+enum WomGearPowerControlPolicy {
+  WOM_MAINTAIN_GEAR_POWER_AS_IS = 0;
+  WOM_MAINTAIN_GEAR_POWER_AT_LOW_POWER_MODE = 1;
+  WOM_TURN_OFF_GEAR_POWER_COMPLETELY = 2;
+}
+
+enum WomBleConnectionPolicy {
+  WOM_MAINTAIN_BLE_CONNECTION_AS_IS = 0;
+  WOM_MAINTAIN_BLE_CONNECTION_AT_LOW_POWER_MODE = 1;
+  WOM_TURN_OFF_BLE_COMPLETELY = 2;
+}
+
+enum ChargingStatus {
+  CHARGING = 1;
+  NOT_CHARGING = 2;
+}
+
+message Request {
+  required .google.jacquard.protocol.Domain domain = 1;
+  required .google.jacquard.protocol.Opcode opcode = 2;
+  required uint32 id = 3;
+  optional uint32 component_id = 4;
+  extensions 99 to max;
+}
+
+message Response {
+  required uint32 id = 1;
+  required .google.jacquard.protocol.Status status = 2;
+  optional uint32 component_id = 3;
+  extensions 99 to max;
+}
+
+message Notification {
+  required .google.jacquard.protocol.Domain domain = 1;
+  required .google.jacquard.protocol.Opcode opcode = 2;
+  optional uint32 component_id = 3;
+  extensions 99 to max;
+}
+
+message SupportedRequest {
+  optional .google.jacquard.protocol.Opcode opcode = 1;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.SupportedRequest supported = 99;
+  }
+}
+
+message DeviceInfoRequest {
+  optional uint32 component = 1;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DeviceInfoRequest device_info = 103;
+  }
+}
+
+message DeviceInfoResponse {
+  required string vendor = 1;
+  required string model = 2;
+  required uint32 revision = 3 [default = 1];
+  required string uuid = 4;
+  optional uint32 firmware_major = 5;
+  optional uint32 firmware_minor = 6;
+  optional uint32 firmware_point = 7;
+  optional uint32 bootloader_major = 8;
+  optional uint32 bootloader_minor = 9;
+  optional uint32 bootloader_point = 10;
+  optional uint32 vendor_id = 11;
+  optional uint32 product_id = 12;
+  optional string gear_id = 13;
+  optional string sku_id = 14;
+  optional string ml_version = 15;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DeviceInfoResponse device_info = 103;
+  }
+}
+
+message Color {
+  optional uint32 red = 1;
+  optional uint32 green = 2;
+  optional uint32 blue = 3;
+}
+
+message LedPatternFrames {
+  optional .google.jacquard.protocol.Color color = 1;
+  optional uint32 length_ms = 2;
+}
+
+message LedPatternRequest {
+  optional uint32 pattern_uid = 1;
+  optional .google.jacquard.protocol.PatternType pattern_type = 2;
+  repeated .google.jacquard.protocol.LedPatternFrames frames = 3;
+  optional uint32 pause_between_cycles_ms = 4;
+  optional uint32 duration_ms = 5;
+  optional uint32 intensity_level = 6;
+  optional uint32 priority_level = 7;
+  optional .google.jacquard.protocol.PatternPlayType play_pause_toggle = 8;
+  optional bool resumable = 9;
+  optional bool halt_all = 10;
+  optional uint32 number_of_cycles = 11;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.LedPatternRequest led_pattern_request = 118;
+  }
+}
+
+message LedPatternNotification {
+  optional uint32 pattern_uid = 1;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.LedPatternNotification led_pattern_notif = 118;
+  }
+}
+
+message ConfigElement {
+  optional string key = 1;
+  optional bool bool_val = 2;
+  optional uint32 uint32_val = 3;
+  optional uint64 uint64_val = 4;
+  optional int32 int32_val = 5;
+  optional int64 int64_val = 6;
+  optional float float_val = 7;
+  optional double double_val = 8;
+  optional string string_val = 9;
+}
+
+message ConfigSetRequest {
+  optional uint32 vid = 1;
+  optional uint32 pid = 2;
+  optional .google.jacquard.protocol.ConfigElement config = 3;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.ConfigSetRequest config_set_request = 122;
+  }
+}
+
+message ConfigGetRequest {
+  optional uint32 vid = 1;
+  optional uint32 pid = 2;
+  optional string key = 3;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.ConfigGetRequest config_get_request = 123;
+  }
+}
+
+message ConfigGetResponse {
+  optional .google.jacquard.protocol.ConfigElement config = 1;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.ConfigGetResponse config_get_response = 123;
+  }
+}
+
+message ConfigGetIndexRequest {
+  optional uint32 vid = 1;
+  optional uint32 pid = 2;
+  optional uint32 index = 3;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.ConfigGetIndexRequest config_get_index = 124;
+  }
+}
+
+message HapticSymbol {
+  required uint32 on_ms = 1;
+  required uint32 off_ms = 2;
+  required .google.jacquard.protocol.HapticSymbolType pattern = 3;
+  required uint32 max_amplitude_percent = 4;
+  required uint32 repeat_n_minus_one = 5;
+}
+
+message InferenceData {
+  optional uint32 event = 1;
+}
+
+message TouchData {
+  optional uint32 diff_proximity = 1;
+  optional bytes diff_touch = 2;
+  optional uint32 inference_result = 3;
+  optional uint32 sequence = 4;
+  optional uint32 crc16 = 5;
+  optional bytes confidence_array = 6;
+  optional bytes diff_data_scaled = 7;
+  optional bytes raw_data = 8;
+}
+
+message TouchWidgetConfig {
+  required uint32 resolution = 1;
+  required uint32 sensor_clk_freq_divisor = 2;
+  required uint32 idac_mod_value = 3;
+}
+
+message TouchConfigData {
+  repeated .google.jacquard.protocol.TouchWidgetConfig config = 1;
+  optional bytes compensation_idac_values = 2;
+  optional uint32 mod_csd_clk_divisor = 3;
+}
+
+message HWGearRequest {
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.HWGearRequest hw_gear_char = 902;
+  }
+}
+
+message HWGearResponse {
+  optional .google.jacquard.protocol.GearChar characteristics = 1;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.HWGearResponse hw_gear_char = 902;
+  }
+}
+
+message HapticRequest {
+  optional .google.jacquard.protocol.HapticSymbol frames = 1;
+  optional uint32 pause_between_cycles_ms = 2;
+  optional uint32 Repeat_full_pattern = 3;
+  optional uint32 intensity_level = 4;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.HapticRequest haptic = 906;
+  }
+}
+
+message HapticResponse {
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.HapticResponse haptic = 906;
+  }
+}
+
+message HapticNotification {
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.HapticNotification haptic = 916;
+  }
+}
+
+message DataChannelRequest {
+  optional .google.jacquard.protocol.DataStreamState inference = 1;
+  optional .google.jacquard.protocol.DataStreamState touch = 2;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DataChannelRequest data = 907;
+  }
+}
+
+message DataChannelResponse {
+  optional .google.jacquard.protocol.DataStreamState inference = 1;
+  optional .google.jacquard.protocol.DataStreamState touch = 2;
+  optional .google.jacquard.protocol.TouchConfigData touch_config = 3;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DataChannelResponse data = 907;
+  }
+}
+
+message DataChannelNotification {
+  optional .google.jacquard.protocol.InferenceData inference_data = 1;
+  optional .google.jacquard.protocol.TouchData touch_data = 2;
+  optional uint32 timestamp_ticks = 3;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.DataChannelNotification data = 917;
+  }
+}
+
+message HapticNotificationDetails {
+  required .google.jacquard.protocol.HapticType haptic_type = 1;
+  required uint32 strength_percent = 2;
+  required uint32 symbol_duration_ms = 3;
+}
+
+message VibeMotorChar {
+  required uint32 motor_num = 1;
+  optional .google.jacquard.protocol.HapticNotificationDetails attach_notification = 2;
+  optional .google.jacquard.protocol.HapticNotificationDetails gesture_recognition_notification = 3;
+}
+
+message CapacitiveTouchpadChar {
+  required .google.jacquard.protocol.SKUMaterial material = 1;
+  required uint32 pitch_mm = 2;
+  required uint32 electrode_lines_num = 3;
+  required uint32 electrode_lines_length_cm = 4;
+  optional uint32 pitch_um = 5;
+}
+
+message LedsArrayChar {
+  required .google.jacquard.protocol.LEDType type = 1;
+  required uint32 led_num = 2;
+  required .google.jacquard.protocol.LEDGeometry format = 3;
+}
+
+message GearChar {
+  required uint32 id = 1;
+  optional .google.jacquard.protocol.VibeMotorChar motor_1 = 4;
+  optional .google.jacquard.protocol.VibeMotorChar motor_2 = 5;
+  optional .google.jacquard.protocol.CapacitiveTouchpadChar cap_touchpad_1 = 6;
+  optional .google.jacquard.protocol.CapacitiveTouchpadChar cap_touchpad_2 = 7;
+  optional .google.jacquard.protocol.LedsArrayChar led_array_1 = 8;
+  optional .google.jacquard.protocol.LedsArrayChar led_array_2 = 9;
+  optional .google.jacquard.protocol.ConnectorType connector_type = 10;
+}
+
+message HelloResponse {
+  required uint32 protocol_min = 1;
+  required uint32 protocol_max = 2;
+  required string vendor = 3;
+  required string model = 4;
+  optional bytes auth_challenge = 5;
+  optional uint32 vendor_id = 6;
+  optional uint32 product_id = 7;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.HelloResponse hello = 100;
+  }
+}
+
+message BeginRequest {
+  required uint32 protocol = 1;
+  optional bytes auth_challenge = 2;
+  optional bytes auth_response = 3;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.BeginRequest begin = 101;
+  }
+}
+
+message BeginResponse {
+  optional bytes auth_response = 1;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.BeginResponse begin = 101;
+  }
+}
+
+message DisconnectNotification {
+  required bool reconnect = 1;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.DisconnectNotification disconnect_notification = 102;
+  }
+}
+
+message AttachedNotification {
+  optional bool attach_state = 1;
+  optional uint32 vendor_id = 2;
+  optional uint32 product_id = 3;
+  optional uint32 component_id = 4;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.AttachedNotification attached = 109;
+  }
+}
+
+message ErrorNotification {
+  optional uint32 device = 1;
+  required uint32 subsystem = 2;
+  required uint32 errorcode = 3;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.ErrorNotification error_notification = 117;
+  }
+}
+
+message DFUStatusRequest {
+  optional uint32 vendor_id = 1;
+  optional uint32 product_id = 2;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DFUStatusRequest dfu_status = 200;
+  }
+}
+
+message DFUStatusResponse {
+  optional uint32 component = 1;
+  required uint32 final_size = 2;
+  optional uint32 final_crc = 3;
+  optional uint32 current_size = 4;
+  optional uint32 current_crc = 5;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DFUStatusResponse dfu_status = 200;
+  }
+}
+
+message DFUPrepareRequest {
+  required uint32 component = 1;
+  required uint32 final_size = 2;
+  required uint32 final_crc = 3;
+  optional uint32 vendor_id = 4;
+  optional uint32 product_id = 5;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DFUPrepareRequest dfu_prepare = 201;
+  }
+}
+
+message DFUWriteRequest {
+  required uint32 offset = 1;
+  required bytes data = 2;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DFUWriteRequest dfu_write = 202;
+  }
+}
+
+message DFUWriteResponse {
+  required uint32 offset = 1;
+  required uint32 crc = 2;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DFUWriteResponse dfu_write = 202;
+  }
+}
+
+message DFUExecuteRequest {
+  optional uint32 vendor_id = 1;
+  optional uint32 product_id = 2;
+  optional .google.jacquard.protocol.UpdateSchedule update_sched = 3;
+  optional bool keep_fw_binary = 4;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DFUExecuteRequest dfu_execute = 203;
+  }
+}
+
+message DFUExecuteUpdateNotification {
+  optional uint32 vendor_id = 1;
+  optional uint32 product_id = 2;
+  optional uint32 firmware_major = 3;
+  optional uint32 firmware_minor = 4;
+  optional uint32 firmware_point = 5;
+  optional .google.jacquard.protocol.Status status = 6;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.DFUExecuteUpdateNotification dfu_execute_udpate_notif = 204;
+  }
+}
+
+message GenericBlobMessagePayload {
+  required .google.jacquard.protocol.GenericBlobMsgType msg_type = 1;
+  required bytes block = 2;
+}
+
+message GenericEncryptedNotification {
+  required bytes block_vector = 1;
+  required bytes encrypted_block = 2;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.GenericEncryptedNotification generic_encrypted_notice = 401;
+  }
+}
+
+message GenericPlainNotification {
+  required bytes plain_block = 1;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.GenericPlainNotification generic_plain_notice = 402;
+  }
+}
+
+message OtaDfuMetadata {
+  optional uint32 final_size = 1;
+  optional uint32 final_crc = 2;
+  optional uint32 current_size = 3;
+  optional uint32 current_crc = 4;
+  optional uint32 final_image_size = 5;
+  optional uint32 final_image_crc = 6;
+  optional uint32 current_image_size = 7;
+  optional uint32 current_image_crc = 8;
+  optional uint32 write_addr = 9;
+  repeated uint32 signed_hash = 10;
+  repeated uint32 hash_context = 11;
+  optional bool is_signed = 12;
+}
+
+message ImuConfiguration {
+  optional uint32 sensor_id = 1;
+  optional bool accel_low_power_mode = 2;
+  optional .google.jacquard.protocol.ImuFilterMode accel_filter_mode = 3;
+  optional .google.jacquard.protocol.ImuAccelSampleRate accel_sample_rate = 4;
+  optional .google.jacquard.protocol.ImuAccelRange accel_range = 5;
+  optional bool gyro_low_power_mode = 6;
+  optional .google.jacquard.protocol.ImuFilterMode gyro_filter_mode = 7;
+  optional .google.jacquard.protocol.ImuGyroSampleRate gyro_sample_rate = 8;
+  optional .google.jacquard.protocol.ImuGyroRange gyro_range = 9;
+}
+
+message BleConfiguration {
+  optional string custom_adv_name = 1;
+  optional int32 tx_power_default = 2;
+  optional int32 tx_power_max = 3;
+  optional float fast_adv_interval_ms = 4;
+  optional uint32 fast_adv_duration_sec = 5 [default = 60];
+  optional float slow_adv_interval_ms = 6;
+  optional uint32 slow_adv_duration_sec = 7 [default = 60];
+  optional uint32 min_conn_interval = 8;
+  optional uint32 max_conn_interval = 9;
+  optional uint32 notif_queue_depth = 10 [default = 14];
+  optional float medium_adv_interval_ms = 11;
+  optional uint32 medium_adv_duration_sec = 12 [default = 60];
+}
+
+message WomConfiguration {
+  optional bool enable = 1;
+  optional .google.jacquard.protocol.ImuAccelSampleRate sensitivity = 2 [default = ACCEL_ODR_3_12_HZ];
+  optional uint32 motion_threshold = 3 [default = 20];
+  optional uint32 no_motion_timeout_ms = 4;
+  optional .google.jacquard.protocol.WomGearPowerControlPolicy gear_power_policy = 5;
+  optional .google.jacquard.protocol.WomBleConnectionPolicy ble_conn_policy = 6;
+}
+
+message UJTConfigReadRequest {
+  optional bool imu_config = 1;
+  optional bool ble_config = 2;
+  optional bool wom_config = 3;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.UJTConfigReadRequest config_read = 1100;
+  }
+}
+
+message UJTConfigWriteRequest {
+  optional .google.jacquard.protocol.ImuConfiguration imu_config = 1;
+  optional .google.jacquard.protocol.BleConfiguration ble_config = 2;
+  optional .google.jacquard.protocol.WomConfiguration wom_config = 3;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.UJTConfigWriteRequest config_write = 1101;
+  }
+}
+
+message UJTConfigResponse {
+  optional .google.jacquard.protocol.ImuConfiguration imu_config = 1;
+  optional .google.jacquard.protocol.BleConfiguration ble_config = 2;
+  optional .google.jacquard.protocol.WomConfiguration wom_config = 3;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.UJTConfigResponse config_response = 1101;
+  }
+}
+
+message DataCollectionMetadata {
+  optional string campaign_id = 1;
+  optional string session_id = 2;
+  optional string trial_id = 3;
+  optional string subject_id = 4;
+  optional .google.jacquard.protocol.DataCollectionMode mode = 5;
+  optional uint32 action_id = 6;
+  repeated uint32 sensor_ids = 7;
+  optional bytes custom_data = 8;
+  optional string product_id = 9;
+}
+
+message DataCollectionTrialSensorData {
+  optional uint32 sensor_id = 1;
+  optional uint32 format_version = 2;
+  optional uint32 fsize = 3;
+  optional uint32 crc16 = 4;
+}
+
+message DataCollectionTrialData {
+  optional string subject_id = 1;
+  repeated .google.jacquard.protocol.DataCollectionTrialSensorData sensor_data = 2;
+}
+
+message DataCollectionTrialList {
+  optional string trial_id = 1;
+  repeated .google.jacquard.protocol.DataCollectionTrialData trial_data = 2;
+  optional string campaign_id = 3;
+  optional string session_id = 4;
+  optional string product_id = 5;
+}
+
+message DataCollectionStartRequest {
+  optional .google.jacquard.protocol.DataCollectionMetadata metadata = 1;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DataCollectionStartRequest start = 1001;
+  }
+}
+
+message DataCollectionStartResponse {
+  optional .google.jacquard.protocol.DataCollectionStatus dc_status = 1;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DataCollectionStartResponse start = 1001;
+  }
+}
+
+message DataCollectionStopRequest {
+  optional bool is_error = 1;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DataCollectionStopRequest stop = 1002;
+  }
+}
+
+message DataCollectionStopResponse {
+  optional uint32 timestamp = 1;
+  optional .google.jacquard.protocol.DataCollectionStatus dc_status = 2;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DataCollectionStopResponse stop = 1002;
+  }
+}
+
+message DataCollectionStatusRequest {
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DataCollectionStatusRequest status = 1003;
+  }
+}
+
+message DataCollectionStatusResponse {
+  optional .google.jacquard.protocol.DataCollectionStatus dc_status = 1;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DataCollectionStatusResponse status = 1003;
+  }
+}
+
+message DataCollectionTrialListRequest {
+  optional string campaign_id = 1;
+  optional string session_id = 2;
+  optional string product_id = 3;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DataCollectionTrialListRequest trial_list = 1004;
+  }
+}
+
+message DataCollectionTrialListResponse {
+  optional .google.jacquard.protocol.DataCollectionStatus dc_status = 1;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DataCollectionTrialListResponse trial_list = 1004;
+  }
+}
+
+message DataCollectionTrialListNotification {
+  repeated .google.jacquard.protocol.DataCollectionTrialList trials = 1;
+  optional .google.jacquard.protocol.DataCollectionTrialList trial = 2;
+  optional uint32 total_trials = 3;
+  optional uint32 trial_index = 4;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.DataCollectionTrialListNotification trial_list = 1004;
+  }
+}
+
+message DataCollectionTrialDataRequest {
+  optional string campaign_id = 1;
+  optional string session_id = 2;
+  optional string trial_id = 3;
+  optional string subject_id = 4;
+  optional uint32 sensor_id = 5;
+  optional uint32 offset = 6;
+  optional string product_id = 7;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DataCollectionTrialDataRequest trial_data = 1005;
+  }
+}
+
+message DataCollectionTrialDataResponse {
+  optional .google.jacquard.protocol.DataCollectionStatus dc_status = 4;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DataCollectionTrialDataResponse trial_data = 1005;
+  }
+}
+
+message DataCollectionEraseTrialDataRequest {
+  optional string campaign_id = 1;
+  optional string session_id = 2;
+  optional string trial_id = 3;
+  optional string product_id = 4;
+  optional string subject_id = 5;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DataCollectionEraseTrialDataRequest erase_trial_data = 1007;
+  }
+}
+
+message DataCollectionEraseTrialDataResponse {
+  optional .google.jacquard.protocol.DataCollectionStatus dc_status = 1;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DataCollectionEraseTrialDataResponse erase_trial_data = 1007;
+  }
+}
+
+message DataCollectionEraseAllDataRequest {
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DataCollectionEraseAllDataRequest erase_all_data = 1008;
+  }
+}
+
+message DataCollectionEraseAllDataResponse {
+  optional .google.jacquard.protocol.DataCollectionStatus dc_status = 1;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.DataCollectionEraseAllDataResponse erase_all_data = 1008;
+  }
+}
+
+message DataCollectionProgressNotification {
+  optional uint32 sensor_id = 1;
+  optional uint32 crc_progress_pct = 2;
+  optional uint32 compression_progress_pct = 3;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.DataCollectionProgressNotification progress = 1009;
+  }
+}
+
+message DataCollectionActionHeader {
+  optional uint32 action_id = 1;
+  optional bool is_error = 2;
+  optional uint32 num_samples = 3;
+}
+
+message ModuleDescriptor {
+  optional string name = 1;
+  optional uint32 vendor_id = 2;
+  optional uint32 product_id = 3;
+  optional uint32 module_id = 4;
+  optional uint32 ver_major = 5;
+  optional uint32 ver_minor = 6;
+  optional uint32 ver_point = 7;
+  optional bool is_enabled = 8;
+  optional uint32 api_level = 9;
+  optional string ml_version = 10;
+  optional uint32 size_bytes = 11;
+}
+
+message LoadModuleRequest {
+  optional .google.jacquard.protocol.ModuleDescriptor module = 1;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.LoadModuleRequest load_module = 1200;
+  }
+}
+
+message LoadModuleNotification {
+  optional .google.jacquard.protocol.Status status = 1;
+  optional .google.jacquard.protocol.ModuleDescriptor module = 2;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.LoadModuleNotification load_module_notif = 1200;
+  }
+}
+
+message UnloadModuleRequest {
+  optional .google.jacquard.protocol.ModuleDescriptor module = 1;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.UnloadModuleRequest unload_module = 1201;
+  }
+}
+
+message ListModuleResponse {
+  repeated .google.jacquard.protocol.ModuleDescriptor modules = 1;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.ListModuleResponse list_modules = 1202;
+  }
+}
+
+message DeleteModuleRequest {
+  optional .google.jacquard.protocol.ModuleDescriptor module = 1;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DeleteModuleRequest delete_module = 1203;
+  }
+}
+
+message BatteryStatusRequest {
+  optional bool read_battery_level = 1;
+  optional bool read_charging_status = 2;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.BatteryStatusRequest battery_status_request = 121;
+  }
+}
+
+message BatteryStatusResponse {
+  optional uint32 battery_level = 1;
+  optional .google.jacquard.protocol.ChargingStatus charging_status = 2;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.BatteryStatusResponse battery_status_response = 121;
+  }
+}
+
+message BatteryStatusNotification {
+  optional uint32 battery_level = 1;
+  optional .google.jacquard.protocol.ChargingStatus charging_status = 2;
+  extend .google.jacquard.protocol.Notification {
+    optional .google.jacquard.protocol.BatteryStatusNotification battery_status_notification = 121;
+  }
+}
+
+message BleDisconnectRequest {
+  optional uint32 timeout_second = 1;
+  optional bool reconnect_only_on_wom = 2;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.BleDisconnectRequest ble_disconnect_request = 125;
+  }
+}
+
+message DeviceRebootRequest {
+  optional bool reboot_only_interposer = 1;
+  optional bool silent_reboot = 2 [default = true];
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.DeviceRebootRequest device_reboot_request = 126;
+  }
+}
+
+message FaultlogGetRequest {
+  optional uint32 start_record_index = 1;
+  optional uint32 records_count = 2;
+  optional bool get_faults = 3;
+  optional bool get_errors = 4;
+  optional bool get_resets = 5;
+  optional bool get_app_err_faults = 6;
+  extend .google.jacquard.protocol.Request {
+    optional .google.jacquard.protocol.FaultlogGetRequest fault_log_get_request = 127;
+  }
+}
+
+message AppErrFaultRecord {
+  optional uint32 record_id = 1;
+  optional uint32 id = 2;
+  optional uint32 info = 3;
+  optional uint32 pc_error = 4;
+  repeated uint32 stack_trace = 5;
+}
+
+message FaultRecord {
+  optional uint32 record_id = 1;
+  optional uint32 parameter = 2;
+  optional uint32 pc_register = 3;
+  optional uint32 lr_register = 4;
+  repeated uint32 stack_trace = 5;
+}
+
+message ErrorRecord {
+  optional uint32 record_id = 1;
+  optional uint32 parameter = 2;
+  optional string function_name = 3;
+  optional uint32 line_number = 4;
+  optional uint32 pc_register = 5;
+  optional uint32 lr_register = 6;
+}
+
+message ResetReasonRecord {
+  optional uint32 record_id = 1;
+  optional uint32 reset_reason = 2;
+}
+
+message FaultlogGetResponse {
+  optional uint32 last_record_index = 1;
+  repeated .google.jacquard.protocol.ResetReasonRecord reset_reason_records = 2;
+  repeated .google.jacquard.protocol.AppErrFaultRecord apperrfault_records = 3;
+  repeated .google.jacquard.protocol.FaultRecord fault_records = 4;
+  repeated .google.jacquard.protocol.ErrorRecord error_records = 5;
+  extend .google.jacquard.protocol.Response {
+    optional .google.jacquard.protocol.FaultlogGetResponse fault_log_get_response = 127;
+  }
+}

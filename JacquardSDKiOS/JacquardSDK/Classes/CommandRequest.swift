@@ -120,7 +120,7 @@ extension CommandRequest {
   public func parseOuterResponse(data: Data) -> Result<V2ProtocolCommandResponseInjectable, Error> {
     do {
       let outerProto = try Google_Jacquard_Protocol_Response(
-        serializedData: data, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
+        serializedBytes: data, extensions: Google_Jacquard_Protocol_Jacquard_Extensions)
       guard outerProto.status == .ok || ignoreResponseErrorChecks() else {
         let error =
           CommandResponseStatus(rawValue: outerProto.status.rawValue)

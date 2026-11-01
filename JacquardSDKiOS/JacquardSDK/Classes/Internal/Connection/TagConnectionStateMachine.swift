@@ -134,7 +134,7 @@ extension TagConnectionStateMachine {
     // in execution.
     invalidateConnectionTimer()
 
-    marshalQueue.async {
+    marshalQueue.async { [self] in
 
       self.context.currentProgress = 0
       // Prepare the pairing child state machine.
@@ -436,12 +436,12 @@ extension TagConnectionStateMachine {
     // (t8)
     case (.configuring, .tagConfigured(let tag)):
       jqLogger.info("Tag configured: \(tag.name)")
+      // JacquardRemote patch: Google's firmware cloud is gone, so a forced update for "bad"
+      // firmware versions can never succeed and would block connecting. Always connect.
       if let tagVersion = tag.tagComponent.version, Version.badFirmwares.contains(tagVersion) {
-        state = .firmwareUpdateInitiated
-        checkFirmwareUpdate(tag)
-      } else {
-        state = .connected(tag)
+        jqLogger.warning("Tag firmware \(tagVersion) is flagged for update; skipping (cloud offline).")
       }
+      state = .connected(tag)
 
     case (.firmwareUpdateInitiated, .firmwareTransferring(let progress)),
       (.firmwareTransferring, .firmwareTransferring(let progress)):

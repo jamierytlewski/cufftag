@@ -520,7 +520,7 @@ extension FirmwareUpdateStateMachine {
               self.handleEvent(.internalError("Battery status request failed."))
             }
           }
-        } receiveValue: { batteryLevel in
+        } receiveValue: { [self] batteryLevel in
           self.batteryLevel = Int(batteryLevel)
           self.marshalQueue.async { [weak self] in
             guard let self = self else { return }

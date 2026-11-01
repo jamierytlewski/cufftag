@@ -79,7 +79,7 @@ class CentralManagerImplementation: NSObject, CentralManager {
   }
 }
 
-extension CBManagerState: CustomStringConvertible {
+extension CBManagerState: @retroactive CustomStringConvertible {
 
   /// :nodoc:
   public var description: String {

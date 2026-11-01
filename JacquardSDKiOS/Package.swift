@@ -31,7 +31,7 @@ let package = Package(
     .package(
       name: "SwiftProtobuf",
       url: "https://github.com/apple/swift-protobuf.git",
-      from: "1.16.0"),
+      from: "1.39.0"),
 
     // Test only dependencies.
     .package(
