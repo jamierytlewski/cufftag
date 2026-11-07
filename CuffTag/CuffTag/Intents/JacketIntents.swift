@@ -16,6 +16,12 @@ struct LegacyPodcastPlayerUnavailable: Error, CustomLocalizedStringResourceConve
   }
 }
 
+struct GestureProfileUnavailable: Error, CustomLocalizedStringResourceConvertible {
+  var localizedStringResource: LocalizedStringResource {
+    "This gesture profile no longer exists. Choose another profile in the shortcut."
+  }
+}
+
 @MainActor
 private func connectedServices() async throws -> AppServices {
   let services = AppServices.shared
@@ -25,8 +31,13 @@ private func connectedServices() async throws -> AppServices {
 
 // MARK: - Enums
 
-enum SignalOption: String, AppEnum {
-  case nudge, alert, hello, confirm, bookmark, error
+enum SignalOption: String, AppEnum, CaseIterable {
+  case nudge = "nudge"
+  case alert = "alert"
+  case hello = "hello"
+  case confirm = "confirm"
+  case bookmark = "bookmark"
+  case error = "error"
 
   static var typeDisplayRepresentation: TypeDisplayRepresentation = "Signal"
   static var caseDisplayRepresentations: [SignalOption: DisplayRepresentation] = [
@@ -41,8 +52,16 @@ enum SignalOption: String, AppEnum {
   var signal: JacketSignal { JacketSignal.named(rawValue) ?? .confirm }
 }
 
-enum LightColor: String, AppEnum {
-  case copper, indigo, cyan, white, green, amber, red, violet, pink
+enum LightColor: String, AppEnum, CaseIterable {
+  case copper = "copper"
+  case indigo = "indigo"
+  case cyan = "cyan"
+  case white = "white"
+  case green = "green"
+  case amber = "amber"
+  case red = "red"
+  case violet = "violet"
+  case pink = "pink"
 
   static var typeDisplayRepresentation: TypeDisplayRepresentation = "Colour"
   static var caseDisplayRepresentations: [LightColor: DisplayRepresentation] = [
@@ -65,8 +84,14 @@ enum LightColor: String, AppEnum {
   }
 }
 
-enum PodcastCommand: String, AppEnum {
-  case playPause, play, pause, skipForward, skipBack, nextEpisode, bookmark
+enum PodcastCommand: String, AppEnum, CaseIterable {
+  case playPause = "playPause"
+  case play = "play"
+  case pause = "pause"
+  case skipForward = "skipForward"
+  case skipBack = "skipBack"
+  case nextEpisode = "nextEpisode"
+  case bookmark = "bookmark"
 
   static var typeDisplayRepresentation: TypeDisplayRepresentation = "Podcast command"
   static var caseDisplayRepresentations: [PodcastCommand: DisplayRepresentation] = [
@@ -107,7 +132,7 @@ struct SignalJacketIntent: AppIntent {
   static var title: LocalizedStringResource = "Signal My Jacket"
   static var description = IntentDescription(
     "Play a vibration and light signature on your Jacquard sleeve. Use it in a Shortcuts automation (e.g. a message from someone special) to bring back jacket Alerts.")
-  static var openAppWhenRun = false
+  static var supportedModes: IntentModes { .background }
 
   @Parameter(title: "Signal", default: SignalOption.nudge) var signal: SignalOption
 
@@ -123,7 +148,7 @@ struct SignalJacketIntent: AppIntent {
 struct BuzzSleeveIntent: AppIntent {
   static var title: LocalizedStringResource = "Buzz Sleeve"
   static var description = IntentDescription("Vibrate the sleeve a number of times.")
-  static var openAppWhenRun = false
+  static var supportedModes: IntentModes { .background }
 
   @Parameter(title: "Times", default: 1, inclusiveRange: (1, 6)) var times: Int
   @Parameter(title: "Long buzz", default: false) var long: Bool
@@ -147,7 +172,7 @@ struct BuzzSleeveIntent: AppIntent {
 struct FlashLightIntent: AppIntent {
   static var title: LocalizedStringResource = "Flash Jacket Light"
   static var description = IntentDescription("Flash the LED on your Jacquard tag.")
-  static var openAppWhenRun = false
+  static var supportedModes: IntentModes { .background }
 
   @Parameter(title: "Colour", default: .copper) var color: LightColor
   @Parameter(title: "Flashes", default: 3, inclusiveRange: (1, 20)) var count: Int
@@ -167,7 +192,7 @@ struct FlashLightIntent: AppIntent {
 struct FindJacketIntent: AppIntent {
   static var title: LocalizedStringResource = "Find My Jacket"
   static var description = IntentDescription("Strobe the tag light and buzz the sleeve.")
-  static var openAppWhenRun = false
+  static var supportedModes: IntentModes { .background }
 
   @MainActor
   func perform() async throws -> some IntentResult & ProvidesDialog {
@@ -180,7 +205,7 @@ struct GetJacketStatusIntent: AppIntent {
   static var title: LocalizedStringResource = "Get Jacket Status"
   static var description = IntentDescription(
     "Returns connection, battery and active profile — handy in automations.")
-  static var openAppWhenRun = false
+  static var supportedModes: IntentModes { .background }
 
   @MainActor
   func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
@@ -202,7 +227,7 @@ struct GetJacketStatusIntent: AppIntent {
 
 struct GetJacketBatteryIntent: AppIntent {
   static var title: LocalizedStringResource = "Get Jacket Battery"
-  static var openAppWhenRun = false
+  static var supportedModes: IntentModes { .background }
 
   @MainActor
   func perform() async throws -> some IntentResult & ReturnsValue<Int> & ProvidesDialog {
@@ -219,7 +244,7 @@ struct SetProfileIntent: AppIntent {
   static var title: LocalizedStringResource = "Set Gesture Profile"
   static var description = IntentDescription(
     "Switch which gestures do what — e.g. Ride when you connect to CarPlay or start a workout.")
-  static var openAppWhenRun = false
+  static var supportedModes: IntentModes { .background }
 
   @Parameter(title: "Profile") var profile: ProfileEntity
 
@@ -227,11 +252,14 @@ struct SetProfileIntent: AppIntent {
 
   @MainActor
   func perform() async throws -> some IntentResult & ProvidesDialog {
-    AppServices.shared.settings.activeProfileID = profile.id
-    if await AppServices.shared.tag.waitUntilConnected(timeout: 3) {
-      AppServices.shared.tag.signal(.shift)
+    let services = AppServices.shared
+    guard let current = services.settings.activate(id: profile.id) else {
+      throw GestureProfileUnavailable()
     }
-    return .result(dialog: "\(profile.name) profile on.")
+    if await services.tag.waitUntilConnected(timeout: 3) {
+      services.tag.signal(.shift)
+    }
+    return .result(dialog: "\(current.name) profile on.")
   }
 }
 
@@ -239,7 +267,7 @@ struct OpenSleeveCameraIntent: AppIntent {
   static var title: LocalizedStringResource = "Open Sleeve Camera"
   static var description = IntentDescription(
     "Open the camera with your sleeve as the shutter: double tap for a photo, cover for a 3s countdown photo, brush in to flip, brush out for video.")
-  static var openAppWhenRun = true
+  static var supportedModes: IntentModes { .foreground(.immediate) }
 
   @MainActor
   func perform() async throws -> some IntentResult {
@@ -254,7 +282,7 @@ struct PodcastControlIntent: AudioPlaybackIntent {
   static var title: LocalizedStringResource = "Control Podcast"
   static var description = IntentDescription("Legacy CuffTag player action. Use Apple Podcasts playback actions in Shortcuts instead.")
   static var isDiscoverable = false
-  static var openAppWhenRun = false
+  static var supportedModes: IntentModes { .background }
 
   @Parameter(title: "Command", default: .playPause) var command: PodcastCommand
 
@@ -286,7 +314,7 @@ struct PlayLatestEpisodeIntent: AudioPlaybackIntent {
   static var title: LocalizedStringResource = "Play Latest Episode"
   static var description = IntentDescription(
     "Play the newest unplayed episode, optionally from a specific show.")
-  static var openAppWhenRun = false
+  static var supportedModes: IntentModes { .background }
   static var isDiscoverable = false
 
   @Parameter(title: "Show name") var show: String?

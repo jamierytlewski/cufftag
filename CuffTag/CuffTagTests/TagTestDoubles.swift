@@ -11,6 +11,7 @@ final class TestJacquardManager: JacquardManager {
   var scanCount = 0
   var connectionIDs: [UUID] = []
   var knownTags: [PreConnectedTag] = []
+  var disconnectPublisher: AnyPublisher<TagConnectionState, Error>?
 
   var centralState: AnyPublisher<CBManagerState, Never> { state.eraseToAnyPublisher() }
   var isScanning: AnyPublisher<Bool, Never> { scanning.eraseToAnyPublisher() }
@@ -44,7 +45,7 @@ final class TestJacquardManager: JacquardManager {
     disconnect(tag.identifier)
   }
   func disconnect(_ identifier: UUID) -> AnyPublisher<TagConnectionState, Error> {
-    Just(.disconnected(nil)).setFailureType(to: Error.self).eraseToAnyPublisher()
+    disconnectPublisher ?? Just(.disconnected(nil)).setFailureType(to: Error.self).eraseToAnyPublisher()
   }
 }
 

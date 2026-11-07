@@ -118,6 +118,43 @@ final class CuffTagTests: XCTestCase {
     XCTAssertEqual(controller.status, .notPaired)
   }
 
+  func testDisconnectWaitsForDisconnectedStateBeforeCancelling() async {
+    defaults.set(UUID().uuidString, forKey: "savedTagID")
+    let manager = TestJacquardManager()
+    let states = PassthroughSubject<TagConnectionState, Error>()
+    var cancelled = false
+    manager.disconnectPublisher = states.handleEvents(receiveCancel: { cancelled = true }).eraseToAnyPublisher()
+    let controller = TagController(manager: manager, defaults: defaults)
+
+    controller.forgetTag()
+    states.send(.preparingToConnect)
+    await drainMainQueue()
+    XCTAssertFalse(cancelled)
+
+    states.send(.disconnected(nil))
+    await drainMainQueue()
+    XCTAssertTrue(cancelled)
+  }
+
+  func testEmptyBatteryResponseCompletesExactlyOnce() async {
+    let manager = TestJacquardManager()
+    let controller = TagController(manager: manager, defaults: defaults)
+    let advertised = TestAdvertisedTag(identifier: UUID())
+    let connected = TestConnectedTag(identifier: advertised.identifier)
+    manager.state.send(.poweredOn)
+    await drainMainQueue()
+    controller.pair(.init(id: advertised.identifier, name: advertised.displayName,
+                          tag: advertised, alreadyConnected: false))
+    manager.connection.send(.connected(connected))
+    await drainMainQueue()
+
+    var responses: [Int?] = []
+    controller.refreshBattery { responses.append($0) }
+    await drainMainQueue()
+    XCTAssertEqual(responses.count, 1)
+    XCTAssertNil(responses.first ?? nil)
+  }
+
   func testProfileKeepsShortcutNameAndReturnPreference() throws {
     let settings = GestureSettings(defaults: defaults)
     let action = GestureAction(kind: .runShortcut, parameter: "Start my ride", returnToCuffTag: false)
@@ -128,11 +165,53 @@ final class CuffTagTests: XCTestCase {
     XCTAssertEqual(reloaded.action(for: .brushUp).kind, .none)
   }
 
+  func testActivatingMissingProfileDoesNotChangeTheActiveProfile() {
+    let settings = GestureSettings(defaults: defaults)
+    let initialID = settings.activeProfileID
+    XCTAssertNil(settings.activate(id: UUID()))
+    XCTAssertEqual(settings.activeProfileID, initialID)
+    let other = settings.profiles[1]
+    XCTAssertEqual(settings.activate(id: other.id), other)
+    XCTAssertEqual(settings.activeProfileID, other.id)
+    XCTAssertEqual(GestureSettings(defaults: defaults).activeProfileID, other.id)
+  }
+
   func testLegacyShortcutMappingsPreserveReturnBehavior() throws {
     let data = Data(#"{"kind":"runShortcut","parameter":"Existing shortcut"}"#.utf8)
     let action = try JSONDecoder().decode(GestureAction.self, from: data)
     XCTAssertTrue(action.returnToCuffTag)
     XCTAssertFalse(GestureAction(kind: .runShortcut).returnToCuffTag)
+  }
+
+  func testAppIntentEnumsKeepStableValuesAndCompleteDisplayRepresentations() {
+    XCTAssertEqual(SignalOption.allCases.map(\.rawValue), [
+      "nudge", "alert", "hello", "confirm", "bookmark", "error",
+    ])
+    XCTAssertEqual(Set(SignalOption.caseDisplayRepresentations.keys), Set(SignalOption.allCases))
+    XCTAssertTrue(SignalOption.allCases.allSatisfy { JacketSignal.named($0.rawValue) != nil })
+
+    XCTAssertEqual(LightColor.allCases.map(\.rawValue), [
+      "copper", "indigo", "cyan", "white", "green", "amber", "red", "violet", "pink",
+    ])
+    XCTAssertEqual(Set(LightColor.caseDisplayRepresentations.keys), Set(LightColor.allCases))
+
+    XCTAssertEqual(PodcastCommand.allCases.map(\.rawValue), [
+      "playPause", "play", "pause", "skipForward", "skipBack", "nextEpisode", "bookmark",
+    ])
+    XCTAssertEqual(Set(PodcastCommand.caseDisplayRepresentations.keys), Set(PodcastCommand.allCases))
+  }
+
+  func testAppIntentsDeclareTheirExecutionModes() {
+    XCTAssertEqual(SignalJacketIntent.supportedModes, .background)
+    XCTAssertEqual(BuzzSleeveIntent.supportedModes, .background)
+    XCTAssertEqual(FlashLightIntent.supportedModes, .background)
+    XCTAssertEqual(FindJacketIntent.supportedModes, .background)
+    XCTAssertEqual(GetJacketStatusIntent.supportedModes, .background)
+    XCTAssertEqual(GetJacketBatteryIntent.supportedModes, .background)
+    XCTAssertEqual(SetProfileIntent.supportedModes, .background)
+    XCTAssertEqual(OpenSleeveCameraIntent.supportedModes, .foreground(.immediate))
+    XCTAssertEqual(PodcastControlIntent.supportedModes, .background)
+    XCTAssertEqual(PlayLatestEpisodeIntent.supportedModes, .background)
   }
 
   func testOpenAppShortcutURLDoesNotBringUserBackToJacquard() throws {

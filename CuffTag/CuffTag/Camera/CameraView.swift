@@ -85,6 +85,7 @@ struct CameraView: View {
           Image(systemName: "xmark").font(.headline).frame(width: 44, height: 44)
         }
         .buttonStyle(.glass)
+        .frame(minWidth: 44, minHeight: 44)
         .accessibilityLabel("Close camera")
         Spacer()
         if camera.isRecording, let started = camera.recordingStarted {

@@ -77,6 +77,21 @@ final class DesignAccessibilityTests: XCTestCase {
     attachScreenshot(named: "14-PodcastsTab-Default")
   }
 
+  @MainActor
+  func testConnectedDemoDesignScreenshots() throws {
+    let app = XCUIApplication()
+    app.launchArguments = ["-onboarded", "YES", "-appStoreDemo", "YES"]
+    app.launch()
+
+    XCTAssertTrue(app.otherElements["jacket-sleeve"].waitForExistence(timeout: 8))
+    attachScreenshot(named: "21-JacketTab-Connected")
+    for tab in ["Gestures", "Alerts", "Podcasts"] {
+      app.tabBars.buttons[tab].tap()
+      XCTAssertTrue(app.navigationBars[tab].waitForExistence(timeout: 5))
+      attachScreenshot(named: "22-\(tab)Tab-Connected")
+    }
+  }
+
   /// Captures the full suite of 8 App Store screenshots AND compiles a 24-second App Preview `.mp4` video
   /// (with a stereo AAC audio track) directly into `/tmp/cufftag-appstore-shots/`.
   @MainActor

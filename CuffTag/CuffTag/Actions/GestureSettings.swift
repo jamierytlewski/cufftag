@@ -323,6 +323,12 @@ final class GestureSettings: ObservableObject {
     return match
   }
 
+  func activate(id: UUID) -> GestureProfile? {
+    guard let match = profiles.first(where: { $0.id == id }) else { return nil }
+    activeProfileID = match.id
+    return match
+  }
+
   func addProfile() -> GestureProfile {
     var profile = activeProfile
     profile.id = UUID()

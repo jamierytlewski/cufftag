@@ -286,7 +286,11 @@ final class TagController: ObservableObject {
   }
 
   private func disconnect(_ id: UUID) {
-    fireAndForget(manager.disconnect(id).map { _ in () }.eraseToAnyPublisher())
+    fireAndForget(
+      manager.disconnect(id)
+        .filter { if case .disconnected = $0 { return true }; return false }
+        .map { _ in () }
+        .eraseToAnyPublisher())
   }
 
   private func attach(_ tag: ConnectedTag) {
@@ -366,14 +370,17 @@ final class TagController: ObservableObject {
       return
     }
     let id = UUID()
+    var receivedValue = false
     oneShots[id] = tag.enqueue(BatteryStatusCommand())
+      .first()
       .receive(on: DispatchQueue.main)
       .sink(
-        receiveCompletion: { [weak self] result in
+        receiveCompletion: { [weak self] _ in
           self?.oneShots[id] = nil
-          if case .failure = result { completion?(self?.batteryLevel) }
+          if !receivedValue { completion?(self?.batteryLevel) }
         },
         receiveValue: { [weak self] status in
+          receivedValue = true
           self?.update(battery: status)
           completion?(Int(status.batteryLevel))
         })
@@ -462,7 +469,7 @@ final class TagController: ObservableObject {
 
   private func fireAndForget<T>(_ publisher: AnyPublisher<T, Error>) {
     let id = UUID()
-    oneShots[id] = publisher.receive(on: DispatchQueue.main).sink(
+    oneShots[id] = publisher.first().receive(on: DispatchQueue.main).sink(
       receiveCompletion: { [weak self] _ in self?.oneShots[id] = nil },
       receiveValue: { _ in })
   }
