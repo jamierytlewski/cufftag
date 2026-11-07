@@ -1,8 +1,8 @@
-# Aglet
+# CuffTag
 
-*The small cap that keeps a thread from fraying.*
+*The snap tag in your cuff that keeps the threads alive.*
 
-Aglet is a personal, unofficial iOS 27+ companion app for a Levi's Jacquard jacket, built with
+CuffTag is a personal, unofficial iOS 27+ companion app for a Levi's Jacquard jacket, built with
 SwiftUI and Google's archived [Jacquard iOS SDK](https://github.com/google/JacquardSDKiOS).
 The jacket connection uses local Bluetooth; it does not require a Google account
 or the retired Jacquard cloud.
@@ -32,17 +32,17 @@ Clone the repository. It already keeps these folders together, and the Xcode
 project depends on that layout:
 
 ```sh
-git clone https://github.com/jamierytlewski/aglet.git
+git clone https://github.com/jamierytlewski/cufftag.git
 ```
 
 ```text
-aglet/
+cufftag/
   README.md
-  JacquardRemote/
-    JacquardRemote.xcodeproj
+  CuffTag/
+    CuffTag.xcodeproj
     project.yml
-    JacquardRemote/
-    JacquardRemoteTests/
+    CuffTag/
+    CuffTagTests/
     sdk-offline-firmware.patch
   JacquardSDKiOS/
 ```
@@ -50,11 +50,8 @@ aglet/
 The app references the **local, patched SDK** in the sibling folder. Do not
 replace it with an unpatched online package.
 
-Aglet is the name of the project and repository. Internal identifiers keep their
-original names (target and folder `JacquardRemote`, bundle ID
-`com.jamierytlewski.JacquardRemote`, the URL scheme), and the installed app is
-still labelled "Jacquard" (`CFBundleDisplayName` in `project.yml`), so an
-existing install keeps its pairing, profiles and Shortcuts.
+CuffTag is the name of the app, project and repository. Its Xcode project,
+targets, source folders, bundle identifier and URL scheme all use CuffTag.
 
 Google archived the SDK at v1.0.0, so there is no newer release to pull. The
 local copy is kept building cleanly on current Xcode instead: its protobuf code
@@ -67,20 +64,20 @@ change.
 
 ## Install on your iPhone
 
-1. Open `JacquardRemote/JacquardRemote.xcodeproj` in Xcode. Use the
-   **JacquardRemote** scheme, not the SDK example project. Let package resolution finish.
+1. Open `CuffTag/CuffTag.xcodeproj` in Xcode. Use the
+   **CuffTag** scheme, not the SDK example project. Let package resolution finish.
 2. Connect and unlock your iPhone. Accept **Trust This Computer** if prompted.
-3. In Xcode, select the project, then the **JacquardRemote** app target.
+3. In Xcode, select the project, then the **CuffTag** app target.
    Under **Signing & Capabilities**, leave automatic signing on and choose
    your Apple ID's **Personal Team** or your paid team.
 4. If Xcode says the bundle identifier is unavailable, choose your own unique
-   identifier, such as `com.yourname.JacquardRemote`.
+   identifier, such as `com.yourname.CuffTag`.
 5. Select your actual iPhone as the run destination and press **Run** (Command-R).
    An unsigned command-line build or a simulator build cannot be installed on a phone.
 6. If prompted, enable **Settings > Privacy & Security > Developer Mode** on
    the iPhone, restart it, and confirm. If iOS asks you to trust the developer,
    follow the entry under **Settings > General > VPN & Device Management**.
-7. Open Jacquard and allow Bluetooth. Other permissions are requested when you
+7. Open CuffTag and allow Bluetooth. Other permissions are requested when you
    use the corresponding features.
 
 Xcode may need to download device support before its first run. Signing errors
@@ -104,8 +101,8 @@ Other signing methods have different validity periods.
 
 ## Pair the jacket
 
-1. Charge the tag. Close any old Jacquard app that might be competing for it.
-2. In Jacquard, choose **Begin**, then follow **Find your tag**.
+1. Charge the tag. Close any other app that might be competing for it.
+2. In CuffTag, choose **Begin**, then follow **Find your tag**.
    If you skipped onboarding, use **Jacket > Pair your tag**.
 3. Take the tag out of the cuff. Hold its button for about **four seconds**
    until the light pulses, then select it from the nearby-tags list.
@@ -132,10 +129,10 @@ These are the initial **Everyday** profile mappings. Change them under **Gesture
 | Sleeve gesture | Action |
 |---|---|
 | Double Tap | Play/pause |
-| Brush In | Skip forward 30 seconds in Jacquard podcasts; next Apple Music track |
-| Brush Out | Back 15 seconds in Jacquard podcasts; restart/previous Apple Music track |
+| Brush In | Skip forward 30 seconds in CuffTag podcasts; next Apple Music track |
+| Brush Out | Back 15 seconds in CuffTag podcasts; restart/previous Apple Music track |
 | Cover | Say what's playing, after the Cover-chord window |
-| Cover, then Double Tap | Bookmark the current Jacquard podcast position |
+| Cover, then Double Tap | Bookmark the current CuffTag podcast position |
 | Cover, then Brush In | Volume up |
 | Cover, then Brush Out | Volume down |
 
@@ -176,13 +173,13 @@ unless Practice mode is on; their history entries are labeled **On-screen**.
 ## Podcasts and Apple Music
 
 - **Podcasts > + / Add a show:** search for a public podcast or enter its RSS feed.
-  Start an episode in Jacquard, then use the sleeve. The player supports progress,
+  Start an episode in CuffTag, then use the sleeve. The player supports progress,
   playback speed, skipping and timestamp bookmarks.
 - **Jacket > Settings > Media gestures control:** choose Podcasts or Apple Music.
   Start a track in Apple's Music app and grant media-library permission if requested.
   The selected source can also follow playback activity.
 
-Jacquard does **not** remotely control the Apple Podcasts app, import its private
+CuffTag does **not** remotely control the Apple Podcasts app, import its private
 library or sync its listening position. It has its own podcast player because
 iOS does not provide a general public API for controlling another podcast app.
 The same limitation applies to Spotify. Public podcast feeds normally provide
@@ -203,9 +200,9 @@ For the simplest version:
 
 1. In Apple's Shortcuts app, create **Start my ride**.
 2. Add **Open App**, select **Segway Mobility**, and run it once manually.
-3. In Jacquard's **Gestures** tab, choose a profile and gesture, for example Brush In.
+3. In CuffTag's **Gestures** tab, choose a profile and gesture, for example Brush In.
 4. Select **Run a Shortcut** and enter `Start my ride`.
-5. Leave **Return to Jacquard when finished** off.
+5. Leave **Return to CuffTag when finished** off.
 
 Choosing a gesture replaces that gesture's existing mapping in the selected
 profile. You can use a Cover chord instead if you want to keep its media action.
@@ -223,16 +220,16 @@ want to open Segway, the simple version above is enough.
 
 **Important iOS limits:**
 
-- With Jacquard on screen, a gesture can open Shortcuts and request the shortcut.
-- With Jacquard in the background or the phone locked, the gesture requests a
+- With CuffTag on screen, a gesture can open Shortcuts and request the shortcut.
+- With CuffTag in the background or the phone locked, the gesture requests a
   notification. **Tap it**, and unlock if asked, to run the shortcut.
-- Allow Jacquard notifications. Focus, notification settings and iOS background
+- Allow CuffTag notifications. Focus, notification settings and iOS background
   scheduling can delay or suppress the visible alert.
 - Opening Shortcuts successfully does not prove the named shortcut exists or
   that every action completed. Test it manually first.
 - A Shortcut that opens an app cannot bypass the lock screen. Webhooks do not
   remove this restriction.
-- Once Segway is foreground, Jacquard is background: another sleeve-triggered
+- Once Segway is foreground, CuffTag is background: another sleeve-triggered
   Shortcut uses the notification path.
 
 Configure and use pre-ride actions while stopped. Opening Segway does not itself
@@ -240,18 +237,18 @@ unlock or operate the scooter.
 
 ### Shortcuts can signal the jacket, too
 
-Under Shortcuts actions, look for **Jacquard**. Actions include **Signal My Jacket**,
+Under Shortcuts actions, look for **CuffTag**. Actions include **Signal My Jacket**,
 **Get Jacket Battery**, **Set Gesture Profile**, podcast commands and opening
 Sleeve Camera. The **Alerts** tab contains personal-automation recipes.
 
 For example, a supported Message automation can invoke **Signal My Jacket**.
-Jacquard itself cannot read other apps' notifications. These actions still need
+CuffTag cannot read other apps' notifications. These actions still need
 Bluetooth permission, a reachable compatible tag and sufficient time granted by iOS.
 
 ## Sleeve Camera
 
 Open **Sleeve Camera** from the Jacket tab, or map a gesture to **Open Sleeve Camera**.
-Keep Jacquard's camera visible and the phone unlocked.
+Keep CuffTag's camera visible and the phone unlocked.
 
 | Gesture while Sleeve Camera is open | Action |
 |---|---|
@@ -266,7 +263,7 @@ or an explicit **Discard** action. Resolve an unsaved capture before closing the
 app: pending photos are held in memory and videos in temporary storage, not a
 durable backup.
 
-This controls the camera **inside Jacquard**, not Apple's Camera app, and cannot
+This controls the camera **inside CuffTag**, not Apple's Camera app, and cannot
 take pictures while locked or silently start filming in the background.
 
 ## Firmware: no updates or flashing
@@ -289,7 +286,7 @@ The change is in:
 JacquardSDKiOS/JacquardSDK/Classes/Internal/Connection/TagConnectionStateMachine.swift
 ```
 
-`JacquardRemote/sdk-offline-firmware.patch` records the SDK modification.
+`CuffTag/sdk-offline-firmware.patch` records the SDK modification.
 Do not install random firmware or factory-reset a working tag hoping the app
 can restore it. A future updater would require a verified image for the exact
 hardware, a verified update procedure and a recovery plan.
@@ -301,7 +298,7 @@ Before relying on the jacket:
 1. Confirm Connected, attached gear and a battery reading.
 2. Physically perform each of the four gestures, without tapping the practice tiles.
    Confirm they appear under Recently.
-3. Play a podcast in Jacquard. Check play/pause and both skips, then repeat with the
+3. Play a podcast in CuffTag. Check play/pause and both skips, then repeat with the
    screen locked and headphones connected.
 4. Test Apple Music separately, including background behavior.
 5. Test the tag light and cuff vibration.
@@ -316,7 +313,7 @@ whether the tag was in the cuff, whether the phone was locked, and the exact err
 
 ## Developer commands
 
-Run these from `JacquardRemote/`.
+Run these from `CuffTag/`.
 
 The visual system is intentionally dark and portrait-only for iPhone: indigo
 denim, copper controls and cyan sleeve feedback. Display text uses scalable
@@ -338,7 +335,7 @@ if you intend to regenerate, or Xcode-only edits may be replaced.
 Build for iPhone without signing (compile check, not an installable build):
 
 ```sh
-xcodebuild -project JacquardRemote.xcodeproj -scheme JacquardRemote \
+xcodebuild -project CuffTag.xcodeproj -scheme CuffTag \
   -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 ```
 
@@ -346,13 +343,13 @@ Run tests with an installed simulator. Replace `YOUR_SIMULATOR_UDID` with an ID
 from `xcrun simctl list devices available`:
 
 ```sh
-xcodebuild test -project JacquardRemote.xcodeproj -scheme JacquardRemote \
+xcodebuild test -project CuffTag.xcodeproj -scheme CuffTag \
   -destination 'platform=iOS Simulator,id=YOUR_SIMULATOR_UDID' \
   -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO
 ```
 
 For just the design regression suite, add
-`-only-testing:JacquardRemoteUITests`. Use a dedicated simulator: the UI tests
+`-only-testing:CuffTagUITests`. Use a dedicated simulator: the UI tests
 change the active profile icon and exercise onboarding. Screenshots are retained
 in the test result bundle. Before release, also check VoiceOver traversal on a
 real iPhone and camera controls over bright and dark scenes; simulator tests do

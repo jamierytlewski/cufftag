@@ -436,7 +436,7 @@ extension TagConnectionStateMachine {
     // (t8)
     case (.configuring, .tagConfigured(let tag)):
       jqLogger.info("Tag configured: \(tag.name)")
-      // JacquardRemote patch: Google's firmware cloud is gone, so a forced update for "bad"
+      // CuffTag patch: Google's firmware cloud is gone, so a forced update for "bad"
       // firmware versions can never succeed and would block connecting. Always connect.
       if let tagVersion = tag.tagComponent.version, Version.badFirmwares.contains(tagVersion) {
         jqLogger.warning("Tag firmware \(tagVersion) is flagged for update; skipping (cloud offline).")

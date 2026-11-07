@@ -1,0 +1,21 @@
+diff --git a/JacquardSDK/Classes/Internal/Connection/TagConnectionStateMachine.swift b/JacquardSDK/Classes/Internal/Connection/TagConnectionStateMachine.swift
+index 757328e..b76ec3d 100644
+--- a/JacquardSDK/Classes/Internal/Connection/TagConnectionStateMachine.swift
++++ b/JacquardSDK/Classes/Internal/Connection/TagConnectionStateMachine.swift
+@@ -436,12 +436,12 @@ extension TagConnectionStateMachine {
+     // (t8)
+     case (.configuring, .tagConfigured(let tag)):
+       jqLogger.info("Tag configured: \(tag.name)")
++      // CuffTag patch: Google's firmware cloud is gone, so a forced update for "bad"
++      // firmware versions can never succeed and would block connecting. Always connect.
+       if let tagVersion = tag.tagComponent.version, Version.badFirmwares.contains(tagVersion) {
+-        state = .firmwareUpdateInitiated
+-        checkFirmwareUpdate(tag)
+-      } else {
+-        state = .connected(tag)
++        jqLogger.warning("Tag firmware \(tagVersion) is flagged for update; skipping (cloud offline).")
+       }
++      state = .connected(tag)
+ 
+     case (.firmwareUpdateInitiated, .firmwareTransferring(let progress)),
+       (.firmwareTransferring, .firmwareTransferring(let progress)):

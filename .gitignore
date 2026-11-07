@@ -6,9 +6,12 @@ xcuserdata/
 *.xcuserstate
 DerivedData/
 build/
+*.xcarchive
 *.ipa
 *.dSYM
 *.dSYM.zip
+.env.testflight
+*.p8
 
 # Swift Package Manager
 .build/

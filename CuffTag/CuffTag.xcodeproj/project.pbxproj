@@ -1,0 +1,742 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00BA097ED7E04A8FBEC1F658 /* PodcastStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1605633DB5FF61024E7C430C /* PodcastStore.swift */; };
+		0541DC9CB432CE024603366A /* GestureDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD24A9BBB28804D51226EC3 /* GestureDemoTests.swift */; };
+		08F6ABC22CB5E279B576F4EC /* JacketIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B27573BC3DCAB638B2B6FB9 /* JacketIntents.swift */; };
+		0F65AE1AC381DD8C72FC362F /* LivingSleeve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F1E745780C1F8BD70A33C3 /* LivingSleeve.swift */; };
+		11971D9A4A2B5F6284698AF3 /* PodcastPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBA99F82EA58824F9CA1529 /* PodcastPlayer.swift */; };
+		150518B92E46B62EFDAC6E1F /* JacquardSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 91B636683857C0F017E1C988 /* JacquardSDK */; };
+		2A6377266853736961277A9B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C9541F0E3273999BE2EE3C /* Theme.swift */; };
+		40E13D54A46ACEA298483280 /* TagTestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63372EDA3DE15F6EDA9E721D /* TagTestDoubles.swift */; };
+		42A4B18B9872D09F1A3B96CF /* DesignAccessibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF2973BA125AA11F071F5C /* DesignAccessibilityTests.swift */; };
+		4FDA10019DBAD5F3C2F3565F /* JacquardSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 11264E6067E126BA78C13F1D /* JacquardSDK */; };
+		5123672BAB7965BE54441D5F /* MediaRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B371EFC4FBA324D6AC91E1E3 /* MediaRouter.swift */; };
+		52715A7EB13F3F908B55FDEA /* PodcastsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DF9C8052A211353234F163 /* PodcastsView.swift */; };
+		5529BA5D6F87A8E510B5C945 /* GesturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26237FDA419669F3B55C086E /* GesturesView.swift */; };
+		5CB452581257E9203794C3D2 /* NotificationPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FB9EF3432B8C45E3CF315BA /* NotificationPermission.swift */; };
+		5E0C45C16FAF3A137E4235D9 /* JacketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB869C3D1F020621FE07FAC /* JacketView.swift */; };
+		67A6EE4D77A48F291EBFE1E3 /* AlertsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB82ACD15D7EAA3A9AC2800 /* AlertsView.swift */; };
+		7B591BAEF0A1B97B4F2BA521 /* TagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3517DB4E9DC4DBF0AA1FCCD1 /* TagController.swift */; };
+		8196CF50FAEEBE57BEEAEAD3 /* CuffTagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B77AC1AB4BB01763D13E9B5 /* CuffTagTests.swift */; };
+		84F2B9D2D8598B3A7B71FEE2 /* ActionPerformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E52EEFAAD9969B0DC47DD5C /* ActionPerformer.swift */; };
+		89FC4CBA6F6DE576A9F65BFD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22E61CB08D2F4595DF4AAB32 /* Assets.xcassets */; };
+		8B6177759889F7E9BF6B3BB2 /* CuffTagApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41395BD9E4024894725970D5 /* CuffTagApp.swift */; };
+		8F94511AD069402DCA2B55ED /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAA3472645B0D69BC3930FF /* RootView.swift */; };
+		957BD3A5013B10286AA3665A /* PhoneFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B01468F1BE68A4F7ED8DB6 /* PhoneFinder.swift */; };
+		99E900D553FBF5C5346F9E08 /* PodcastModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 680C3E8F3E1C48ED96116139 /* PodcastModels.swift */; };
+		9A9A0E468171F8F4F241C737 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D91721D391E78FB97790D6 /* CameraView.swift */; };
+		A3E0A4EB3F9C7B33F35332AE /* JacketSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02DC2343C613AFBE4E135D9 /* JacketSignal.swift */; };
+		A9BA10E134E87590F67D1091 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419607F742598A0445D2704 /* SettingsView.swift */; };
+		B432ED98DAD2D10F7823D7DC /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00C6C3DCF2FB1A6443D77B /* OnboardingView.swift */; };
+		C9A23133F27AB587A48DA4A8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D6D36E05E94FE32F8EAADFA5 /* PrivacyInfo.xcprivacy */; };
+		CF60CAF221933EBA251ABD91 /* GestureDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E59A46DB6331300C02269B3 /* GestureDemoUITests.swift */; };
+		D1FB62A8AEF595D2FF357D90 /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3861DD3BBC8325F854B637 /* NowPlayingView.swift */; };
+		D972878324A9956FD8AE2EEE /* SleeveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1521481C99A66E3FE6FF1D72 /* SleeveCamera.swift */; };
+		D99A9C773B2C85CBE67F6465 /* GestureSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D0A146EA6A25F8C89B4EC5 /* GestureSettings.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		415091C6A8AFF058C2F5D568 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14CC5A478D71A582AC10A79D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 938CA2B3AB987C451B5D7106;
+			remoteInfo = CuffTag;
+		};
+		A08913FB1F19A9FB2F81783E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14CC5A478D71A582AC10A79D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 938CA2B3AB987C451B5D7106;
+			remoteInfo = CuffTag;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		02DF9C8052A211353234F163 /* PodcastsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastsView.swift; sourceTree = "<group>"; };
+		1521481C99A66E3FE6FF1D72 /* SleeveCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleeveCamera.swift; sourceTree = "<group>"; };
+		1605633DB5FF61024E7C430C /* PodcastStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastStore.swift; sourceTree = "<group>"; };
+		16C9541F0E3273999BE2EE3C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		16FF2973BA125AA11F071F5C /* DesignAccessibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignAccessibilityTests.swift; sourceTree = "<group>"; };
+		1B27573BC3DCAB638B2B6FB9 /* JacketIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JacketIntents.swift; sourceTree = "<group>"; };
+		1FAA3472645B0D69BC3930FF /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		22E61CB08D2F4595DF4AAB32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		26237FDA419669F3B55C086E /* GesturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GesturesView.swift; sourceTree = "<group>"; };
+		2A3861DD3BBC8325F854B637 /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
+		2E52EEFAAD9969B0DC47DD5C /* ActionPerformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionPerformer.swift; sourceTree = "<group>"; };
+		3517DB4E9DC4DBF0AA1FCCD1 /* TagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagController.swift; sourceTree = "<group>"; };
+		3DB869C3D1F020621FE07FAC /* JacketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JacketView.swift; sourceTree = "<group>"; };
+		41395BD9E4024894725970D5 /* CuffTagApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuffTagApp.swift; sourceTree = "<group>"; };
+		4DB82ACD15D7EAA3A9AC2800 /* AlertsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsView.swift; sourceTree = "<group>"; };
+		57D91721D391E78FB97790D6 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		63372EDA3DE15F6EDA9E721D /* TagTestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTestDoubles.swift; sourceTree = "<group>"; };
+		680C3E8F3E1C48ED96116139 /* PodcastModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModels.swift; sourceTree = "<group>"; };
+		71FE9D32B3DC3BDCCD34DF79 /* CuffTagTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CuffTagTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B77AC1AB4BB01763D13E9B5 /* CuffTagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuffTagTests.swift; sourceTree = "<group>"; };
+		82732C11C2ABAF199EE261AD /* CuffTagUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CuffTagUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		83F1E745780C1F8BD70A33C3 /* LivingSleeve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivingSleeve.swift; sourceTree = "<group>"; };
+		86D0A146EA6A25F8C89B4EC5 /* GestureSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureSettings.swift; sourceTree = "<group>"; };
+		8E59A46DB6331300C02269B3 /* GestureDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureDemoUITests.swift; sourceTree = "<group>"; };
+		98B01468F1BE68A4F7ED8DB6 /* PhoneFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneFinder.swift; sourceTree = "<group>"; };
+		9FB9EF3432B8C45E3CF315BA /* NotificationPermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermission.swift; sourceTree = "<group>"; };
+		A02DC2343C613AFBE4E135D9 /* JacketSignal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JacketSignal.swift; sourceTree = "<group>"; };
+		AAD24A9BBB28804D51226EC3 /* GestureDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureDemoTests.swift; sourceTree = "<group>"; };
+		B371EFC4FBA324D6AC91E1E3 /* MediaRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaRouter.swift; sourceTree = "<group>"; };
+		BB00C6C3DCF2FB1A6443D77B /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		BC024C6E204F64C761006FB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BD458A2F6B92641EC3F706E6 /* JacquardSDKiOS */ = {isa = PBXFileReference; lastKnownFileType = folder; name = JacquardSDKiOS; path = ../JacquardSDKiOS; sourceTree = SOURCE_ROOT; };
+		C23F1FB9713E253E26F3FAFA /* CuffTag.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CuffTag.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6D36E05E94FE32F8EAADFA5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		DEBA99F82EA58824F9CA1529 /* PodcastPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPlayer.swift; sourceTree = "<group>"; };
+		F419607F742598A0445D2704 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C1CE5B5A5C0B104C51E323C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FDA10019DBAD5F3C2F3565F /* JacquardSDK in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F2D8B73E11A9CA19D1C80A3A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				150518B92E46B62EFDAC6E1F /* JacquardSDK in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		102341DA253EE20651E76F7A /* Jacket */ = {
+			isa = PBXGroup;
+			children = (
+				A02DC2343C613AFBE4E135D9 /* JacketSignal.swift */,
+				3517DB4E9DC4DBF0AA1FCCD1 /* TagController.swift */,
+			);
+			path = Jacket;
+			sourceTree = "<group>";
+		};
+		10327221CE736F35D079E995 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				57D91721D391E78FB97790D6 /* CameraView.swift */,
+				1521481C99A66E3FE6FF1D72 /* SleeveCamera.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		1BE3A0E21318429FBBEE022E /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				1B27573BC3DCAB638B2B6FB9 /* JacketIntents.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
+		3581081ED8C74178FADF9EB8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C23F1FB9713E253E26F3FAFA /* CuffTag.app */,
+				71FE9D32B3DC3BDCCD34DF79 /* CuffTagTests.xctest */,
+				82732C11C2ABAF199EE261AD /* CuffTagUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		405D5553D99965F872A97127 /* CuffTag */ = {
+			isa = PBXGroup;
+			children = (
+				22E61CB08D2F4595DF4AAB32 /* Assets.xcassets */,
+				BC024C6E204F64C761006FB7 /* Info.plist */,
+				D6D36E05E94FE32F8EAADFA5 /* PrivacyInfo.xcprivacy */,
+				85E394BDB338A47F82BEDFE9 /* Actions */,
+				C238BEA133AF070ECB2695A4 /* App */,
+				10327221CE736F35D079E995 /* Camera */,
+				1BE3A0E21318429FBBEE022E /* Intents */,
+				102341DA253EE20651E76F7A /* Jacket */,
+				6D8650EDE3005A1A57611ACE /* Podcasts */,
+				452FC36D040A6D9F7E52274B /* Views */,
+			);
+			path = CuffTag;
+			sourceTree = "<group>";
+		};
+		4455DAD4711878049B09437C /* CuffTagTests */ = {
+			isa = PBXGroup;
+			children = (
+				7B77AC1AB4BB01763D13E9B5 /* CuffTagTests.swift */,
+				AAD24A9BBB28804D51226EC3 /* GestureDemoTests.swift */,
+				63372EDA3DE15F6EDA9E721D /* TagTestDoubles.swift */,
+			);
+			path = CuffTagTests;
+			sourceTree = "<group>";
+		};
+		452FC36D040A6D9F7E52274B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4DB82ACD15D7EAA3A9AC2800 /* AlertsView.swift */,
+				26237FDA419669F3B55C086E /* GesturesView.swift */,
+				3DB869C3D1F020621FE07FAC /* JacketView.swift */,
+				83F1E745780C1F8BD70A33C3 /* LivingSleeve.swift */,
+				2A3861DD3BBC8325F854B637 /* NowPlayingView.swift */,
+				BB00C6C3DCF2FB1A6443D77B /* OnboardingView.swift */,
+				02DF9C8052A211353234F163 /* PodcastsView.swift */,
+				1FAA3472645B0D69BC3930FF /* RootView.swift */,
+				F419607F742598A0445D2704 /* SettingsView.swift */,
+				16C9541F0E3273999BE2EE3C /* Theme.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6D8650EDE3005A1A57611ACE /* Podcasts */ = {
+			isa = PBXGroup;
+			children = (
+				680C3E8F3E1C48ED96116139 /* PodcastModels.swift */,
+				DEBA99F82EA58824F9CA1529 /* PodcastPlayer.swift */,
+				1605633DB5FF61024E7C430C /* PodcastStore.swift */,
+			);
+			path = Podcasts;
+			sourceTree = "<group>";
+		};
+		7DD4178AE63D3C1A1E66BEC3 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				BD458A2F6B92641EC3F706E6 /* JacquardSDKiOS */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		85E394BDB338A47F82BEDFE9 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				2E52EEFAAD9969B0DC47DD5C /* ActionPerformer.swift */,
+				86D0A146EA6A25F8C89B4EC5 /* GestureSettings.swift */,
+				B371EFC4FBA324D6AC91E1E3 /* MediaRouter.swift */,
+				9FB9EF3432B8C45E3CF315BA /* NotificationPermission.swift */,
+				98B01468F1BE68A4F7ED8DB6 /* PhoneFinder.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
+		B72952FCBA6321D4F917B128 /* CuffTagUITests */ = {
+			isa = PBXGroup;
+			children = (
+				16FF2973BA125AA11F071F5C /* DesignAccessibilityTests.swift */,
+				8E59A46DB6331300C02269B3 /* GestureDemoUITests.swift */,
+			);
+			path = CuffTagUITests;
+			sourceTree = "<group>";
+		};
+		C238BEA133AF070ECB2695A4 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				41395BD9E4024894725970D5 /* CuffTagApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		D19193F9674F59087F756082 = {
+			isa = PBXGroup;
+			children = (
+				405D5553D99965F872A97127 /* CuffTag */,
+				4455DAD4711878049B09437C /* CuffTagTests */,
+				B72952FCBA6321D4F917B128 /* CuffTagUITests */,
+				7DD4178AE63D3C1A1E66BEC3 /* Packages */,
+				3581081ED8C74178FADF9EB8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		245EB41FB59F4CA66D423DD4 /* CuffTagUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3FA2F088E4D08AB999F59A58 /* Build configuration list for PBXNativeTarget "CuffTagUITests" */;
+			buildPhases = (
+				0476C89A61A0281D44C1697C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				216969FBB198914AED2584B5 /* PBXTargetDependency */,
+			);
+			name = CuffTagUITests;
+			packageProductDependencies = (
+			);
+			productName = CuffTagUITests;
+			productReference = 82732C11C2ABAF199EE261AD /* CuffTagUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		387FCAF55FF4CBC054CE97F7 /* CuffTagTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CBBB82033C9A33A78C3D366 /* Build configuration list for PBXNativeTarget "CuffTagTests" */;
+			buildPhases = (
+				748051143D10D9117C86E52D /* Sources */,
+				C1CE5B5A5C0B104C51E323C1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				306F0C071951A13AB664A53B /* PBXTargetDependency */,
+			);
+			name = CuffTagTests;
+			packageProductDependencies = (
+				11264E6067E126BA78C13F1D /* JacquardSDK */,
+			);
+			productName = CuffTagTests;
+			productReference = 71FE9D32B3DC3BDCCD34DF79 /* CuffTagTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		938CA2B3AB987C451B5D7106 /* CuffTag */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ACAD211B902DD7CABBB9AF37 /* Build configuration list for PBXNativeTarget "CuffTag" */;
+			buildPhases = (
+				72C4DDCD2002F47DCC714E56 /* Sources */,
+				A22D67572C87C8DD778BC2F2 /* Resources */,
+				F2D8B73E11A9CA19D1C80A3A /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CuffTag;
+			packageProductDependencies = (
+				91B636683857C0F017E1C988 /* JacquardSDK */,
+			);
+			productName = CuffTag;
+			productReference = C23F1FB9713E253E26F3FAFA /* CuffTag.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		14CC5A478D71A582AC10A79D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					245EB41FB59F4CA66D423DD4 = {
+						ProvisioningStyle = Automatic;
+						TestTargetID = 938CA2B3AB987C451B5D7106;
+					};
+					387FCAF55FF4CBC054CE97F7 = {
+						ProvisioningStyle = Automatic;
+					};
+					938CA2B3AB987C451B5D7106 = {
+						DevelopmentTeam = D49TW4U996;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 69874145D72EB06B530E767F /* Build configuration list for PBXProject "CuffTag" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D19193F9674F59087F756082;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B37CD6D2978F46FFACC8D20D /* XCLocalSwiftPackageReference "../JacquardSDKiOS" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3581081ED8C74178FADF9EB8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				938CA2B3AB987C451B5D7106 /* CuffTag */,
+				387FCAF55FF4CBC054CE97F7 /* CuffTagTests */,
+				245EB41FB59F4CA66D423DD4 /* CuffTagUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A22D67572C87C8DD778BC2F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89FC4CBA6F6DE576A9F65BFD /* Assets.xcassets in Resources */,
+				C9A23133F27AB587A48DA4A8 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0476C89A61A0281D44C1697C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42A4B18B9872D09F1A3B96CF /* DesignAccessibilityTests.swift in Sources */,
+				CF60CAF221933EBA251ABD91 /* GestureDemoUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		72C4DDCD2002F47DCC714E56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84F2B9D2D8598B3A7B71FEE2 /* ActionPerformer.swift in Sources */,
+				67A6EE4D77A48F291EBFE1E3 /* AlertsView.swift in Sources */,
+				9A9A0E468171F8F4F241C737 /* CameraView.swift in Sources */,
+				8B6177759889F7E9BF6B3BB2 /* CuffTagApp.swift in Sources */,
+				D99A9C773B2C85CBE67F6465 /* GestureSettings.swift in Sources */,
+				5529BA5D6F87A8E510B5C945 /* GesturesView.swift in Sources */,
+				08F6ABC22CB5E279B576F4EC /* JacketIntents.swift in Sources */,
+				A3E0A4EB3F9C7B33F35332AE /* JacketSignal.swift in Sources */,
+				5E0C45C16FAF3A137E4235D9 /* JacketView.swift in Sources */,
+				0F65AE1AC381DD8C72FC362F /* LivingSleeve.swift in Sources */,
+				5123672BAB7965BE54441D5F /* MediaRouter.swift in Sources */,
+				5CB452581257E9203794C3D2 /* NotificationPermission.swift in Sources */,
+				D1FB62A8AEF595D2FF357D90 /* NowPlayingView.swift in Sources */,
+				B432ED98DAD2D10F7823D7DC /* OnboardingView.swift in Sources */,
+				957BD3A5013B10286AA3665A /* PhoneFinder.swift in Sources */,
+				99E900D553FBF5C5346F9E08 /* PodcastModels.swift in Sources */,
+				11971D9A4A2B5F6284698AF3 /* PodcastPlayer.swift in Sources */,
+				00BA097ED7E04A8FBEC1F658 /* PodcastStore.swift in Sources */,
+				52715A7EB13F3F908B55FDEA /* PodcastsView.swift in Sources */,
+				8F94511AD069402DCA2B55ED /* RootView.swift in Sources */,
+				A9BA10E134E87590F67D1091 /* SettingsView.swift in Sources */,
+				D972878324A9956FD8AE2EEE /* SleeveCamera.swift in Sources */,
+				7B591BAEF0A1B97B4F2BA521 /* TagController.swift in Sources */,
+				2A6377266853736961277A9B /* Theme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		748051143D10D9117C86E52D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8196CF50FAEEBE57BEEAEAD3 /* CuffTagTests.swift in Sources */,
+				0541DC9CB432CE024603366A /* GestureDemoTests.swift in Sources */,
+				40E13D54A46ACEA298483280 /* TagTestDoubles.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		216969FBB198914AED2584B5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 938CA2B3AB987C451B5D7106 /* CuffTag */;
+			targetProxy = 415091C6A8AFF058C2F5D568 /* PBXContainerItemProxy */;
+		};
+		306F0C071951A13AB664A53B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 938CA2B3AB987C451B5D7106 /* CuffTag */;
+			targetProxy = A08913FB1F19A9FB2F81783E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		115AAA50A54614273A3DC20A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = D49TW4U996;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = CuffTag/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.cufftag;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		2150A5083358BF79E204A1EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.CuffTagTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CuffTag.app/CuffTag";
+			};
+			name = Debug;
+		};
+		70C1CBD77D5E5E3D56F6ADB8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = D49TW4U996;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = CuffTag/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.cufftag;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		7F3D0E2E8F8CBF59E74C9922 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.CuffTagUITests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CuffTag;
+			};
+			name = Debug;
+		};
+		ACC1B5230CAA0F910D4FA0D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.CuffTagUITests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CuffTag;
+			};
+			name = Release;
+		};
+		B809DF822E12EE1739267128 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C370506CC92BD33CAB240C60 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.CuffTagTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CuffTag.app/CuffTag";
+			};
+			name = Release;
+		};
+		E3D212410DAE0BA812A59DAA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3FA2F088E4D08AB999F59A58 /* Build configuration list for PBXNativeTarget "CuffTagUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7F3D0E2E8F8CBF59E74C9922 /* Debug */,
+				ACC1B5230CAA0F910D4FA0D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4CBBB82033C9A33A78C3D366 /* Build configuration list for PBXNativeTarget "CuffTagTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2150A5083358BF79E204A1EE /* Debug */,
+				C370506CC92BD33CAB240C60 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		69874145D72EB06B530E767F /* Build configuration list for PBXProject "CuffTag" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E3D212410DAE0BA812A59DAA /* Debug */,
+				B809DF822E12EE1739267128 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ACAD211B902DD7CABBB9AF37 /* Build configuration list for PBXNativeTarget "CuffTag" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				115AAA50A54614273A3DC20A /* Debug */,
+				70C1CBD77D5E5E3D56F6ADB8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		B37CD6D2978F46FFACC8D20D /* XCLocalSwiftPackageReference "../JacquardSDKiOS" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../JacquardSDKiOS;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		11264E6067E126BA78C13F1D /* JacquardSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = JacquardSDK;
+		};
+		91B636683857C0F017E1C988 /* JacquardSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = JacquardSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 14CC5A478D71A582AC10A79D /* Project object */;
+}

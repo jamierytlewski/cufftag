@@ -1,0 +1,85 @@
+name: CuffTag
+options:
+  bundleIdPrefix: com.jamierytlewski
+  deploymentTarget:
+    iOS: "27.0"
+  createIntermediateGroups: true
+packages:
+  JacquardSDK:
+    path: ../JacquardSDKiOS
+targets:
+  CuffTag:
+    type: application
+    platform: iOS
+    sources:
+      - CuffTag
+    dependencies:
+      - package: JacquardSDK
+    info:
+      path: CuffTag/Info.plist
+      properties:
+        CFBundleDisplayName: CuffTag
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSBluetoothAlwaysUsageDescription: CuffTag connects to the tag in your jacket over Bluetooth so your sleeve can control your phone.
+        NSAppleMusicUsageDescription: CuffTag controls Apple Music playback and reads what's playing when you ask your sleeve.
+        NSCameraUsageDescription: Sleeve Camera lets you take photos and videos with a double tap on your jacket cuff.
+        NSMicrophoneUsageDescription: Sleeve Camera records sound with your videos.
+        NSPhotoLibraryAddUsageDescription: Photos and videos from Sleeve Camera are saved to your library.
+        UIBackgroundModes: [bluetooth-central, audio]
+        ITSAppUsesNonExemptEncryption: false
+        LSApplicationCategoryType: public.app-category.utilities
+        UIUserInterfaceStyle: Dark
+        CFBundleURLTypes:
+          - CFBundleURLName: com.jamierytlewski.cufftag
+            CFBundleURLSchemes: [cufftag]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jamierytlewski.cufftag
+        DEVELOPMENT_TEAM: D49TW4U996
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_PREVIEWS: YES
+  CuffTagTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - CuffTagTests
+    dependencies:
+      - target: CuffTag
+      - package: JacquardSDK
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic
+  CuffTagUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - CuffTagUITests
+    dependencies:
+      - target: CuffTag
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic
+schemes:
+  CuffTag:
+    build:
+      targets:
+        CuffTag: all
+        CuffTagTests: [test]
+        CuffTagUITests: [test]
+    test:
+      targets:
+        - CuffTagTests
+        - CuffTagUITests
