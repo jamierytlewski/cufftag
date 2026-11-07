@@ -37,20 +37,18 @@ final class ActionPerformer: ObservableObject {
   private let speech: SpeechAnnouncer
   private let volume: VolumeController
   private let tag: TagController
-  private let podcasts: PodcastStore
   private let finder: PhoneFinder
   private var shiftTimer: DispatchWorkItem?
 
   init(
     settings: GestureSettings, media: MediaRouter, speech: SpeechAnnouncer,
-    volume: VolumeController, tag: TagController, podcasts: PodcastStore, finder: PhoneFinder
+    volume: VolumeController, tag: TagController, finder: PhoneFinder
   ) {
     self.settings = settings
     self.media = media
     self.speech = speech
     self.volume = volume
     self.tag = tag
-    self.podcasts = podcasts
     self.finder = finder
   }
 
@@ -143,12 +141,6 @@ final class ActionPerformer: ObservableObject {
         reportShortcutProblem(error.localizedDescription)
         return
       }
-    case .nextEpisode:
-      reportShortcutProblem("Next episode used the retired CuffTag player. Assign your own Apple Podcasts Shortcut in Gestures instead.")
-      return
-    case .bookmark:
-      reportShortcutProblem("CuffTag cannot bookmark Apple Podcasts. Change this mapping in Gestures; your library stays in Apple Podcasts.")
-      return
     case .volumeUp:
       volume.change(by: 0.0625)
     case .volumeDown:
@@ -185,15 +177,6 @@ final class ActionPerformer: ObservableObject {
       runShortcut(action, signalOnSuccess: settings.hapticConfirmation && gesture != nil)
     }
     if let signature, settings.hapticConfirmation, gesture != nil { tag.signal(signature) }
-  }
-
-  private func bookmark() {
-    guard let episode = media.player.episode else {
-      speech.speak("Nothing to bookmark.")
-      return
-    }
-    podcasts.addBookmark(episode, at: media.player.currentTime)
-    confirm("Bookmarked")
   }
 
   private func confirm(_ text: String) {

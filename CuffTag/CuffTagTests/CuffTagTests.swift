@@ -176,10 +176,10 @@ final class CuffTagTests: XCTestCase {
     XCTAssertEqual(GestureSettings(defaults: defaults).activeProfileID, other.id)
   }
 
-  func testLegacyShortcutMappingsPreserveReturnBehavior() throws {
+  func testShortcutMappingsDefaultToNotReturningToApp() throws {
     let data = Data(#"{"kind":"runShortcut","parameter":"Existing shortcut"}"#.utf8)
     let action = try JSONDecoder().decode(GestureAction.self, from: data)
-    XCTAssertTrue(action.returnToCuffTag)
+    XCTAssertFalse(action.returnToCuffTag)
     XCTAssertFalse(GestureAction(kind: .runShortcut).returnToCuffTag)
   }
 
@@ -195,10 +195,6 @@ final class CuffTagTests: XCTestCase {
     ])
     XCTAssertEqual(Set(LightColor.caseDisplayRepresentations.keys), Set(LightColor.allCases))
 
-    XCTAssertEqual(PodcastCommand.allCases.map(\.rawValue), [
-      "playPause", "play", "pause", "skipForward", "skipBack", "nextEpisode", "bookmark",
-    ])
-    XCTAssertEqual(Set(PodcastCommand.caseDisplayRepresentations.keys), Set(PodcastCommand.allCases))
   }
 
   func testAppIntentsDeclareTheirExecutionModes() {
@@ -210,8 +206,6 @@ final class CuffTagTests: XCTestCase {
     XCTAssertEqual(GetJacketBatteryIntent.supportedModes, .background)
     XCTAssertEqual(SetProfileIntent.supportedModes, .background)
     XCTAssertEqual(OpenSleeveCameraIntent.supportedModes, .foreground(.immediate))
-    XCTAssertEqual(PodcastControlIntent.supportedModes, .background)
-    XCTAssertEqual(PlayLatestEpisodeIntent.supportedModes, .background)
   }
 
   func testOpenAppShortcutURLDoesNotBringUserBackToJacquard() throws {
@@ -295,10 +289,8 @@ final class CuffTagTests: XCTestCase {
   }
 
   func testApplePodcastsSourceRequiresShortcutsWithoutControllingOtherPlayers() throws {
-    let store = PodcastStore()
-    let player = PodcastPlayer(store: store)
-    let media = MediaRouter(player: player, defaults: defaults)
-    media.activeSource = .podcasts
+    let media = MediaRouter(defaults: defaults)
+    media.activeSource = .appleMusic
     XCTAssertNil(media.externalSkipForwardShortcut)
     XCTAssertNil(media.externalSkipBackShortcut)
     XCTAssertNil(media.externalPlayPauseShortcut)
@@ -315,20 +307,17 @@ final class CuffTagTests: XCTestCase {
     XCTAssertThrowsError(try media.previous())
     media.applePodcastsPlayPauseShortcut = " \n "
     XCTAssertNil(media.externalPlayPauseShortcut)
-    media.activeSource = .podcasts
   }
 
-  func testMediaSourceKeepsOnePodcastLibraryAndPreservesShortcutSettings() {
-    defaults.set(MediaSource.podcasts.rawValue, forKey: "activeSource")
+  func testMediaSourceDefaultsToPodcastsAndPreservesShortcutSettings() {
     defaults.set("My Play Pause", forKey: "applePodcastsPlayPauseShortcut")
-    let player = PodcastPlayer(store: PodcastStore(), restorePlayback: false)
-    let media = MediaRouter(player: player, defaults: defaults)
+    let media = MediaRouter(defaults: defaults)
     XCTAssertEqual(media.activeSource, .applePodcasts)
     XCTAssertEqual(media.externalPlayPauseShortcut, "My Play Pause")
-    XCTAssertFalse(MediaSource.selectableSources.contains(.podcasts))
-    XCTAssertNil(player.episode)
+    XCTAssertEqual(MediaSource.selectableSources, [.applePodcasts, .appleMusic])
+    XCTAssertEqual(GestureProfile.focus.base[GestureProfile.key(.brushIn)]?.kind, .next)
     media.activeSource = .appleMusic
-    XCTAssertEqual(MediaRouter(player: player, defaults: defaults).activeSource, .appleMusic)
+    XCTAssertEqual(MediaRouter(defaults: defaults).activeSource, .appleMusic)
   }
 
   func testFailedVideoCaptureReportsFailureInsteadOfSaving() async throws {
@@ -351,13 +340,11 @@ final class CuffTagTests: XCTestCase {
     let settings = GestureSettings(defaults: defaults)
     settings.hapticConfirmation = false
     let tag = TagController(manager: TestJacquardManager(), defaults: defaults)
-    let store = PodcastStore()
-    let player = PodcastPlayer(store: store)
-    let media = MediaRouter(player: player, defaults: defaults)
+    let media = MediaRouter(defaults: defaults)
     let volume = VolumeController()
     let performer = ActionPerformer(
-      settings: settings, media: media, speech: SpeechAnnouncer(player: player),
-      volume: volume, tag: tag, podcasts: store, finder: PhoneFinder(volume: volume, player: player))
+      settings: settings, media: media, speech: SpeechAnnouncer(),
+      volume: volume, tag: tag, finder: PhoneFinder(volume: volume))
     return (performer, settings)
   }
 

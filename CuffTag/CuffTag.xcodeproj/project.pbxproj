@@ -7,11 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00BA097ED7E04A8FBEC1F658 /* PodcastStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1605633DB5FF61024E7C430C /* PodcastStore.swift */; };
 		0541DC9CB432CE024603366A /* GestureDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD24A9BBB28804D51226EC3 /* GestureDemoTests.swift */; };
 		08F6ABC22CB5E279B576F4EC /* JacketIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B27573BC3DCAB638B2B6FB9 /* JacketIntents.swift */; };
 		0F65AE1AC381DD8C72FC362F /* LivingSleeve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F1E745780C1F8BD70A33C3 /* LivingSleeve.swift */; };
-		11971D9A4A2B5F6284698AF3 /* PodcastPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBA99F82EA58824F9CA1529 /* PodcastPlayer.swift */; };
 		150518B92E46B62EFDAC6E1F /* JacquardSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 91B636683857C0F017E1C988 /* JacquardSDK */; };
 		2A6377266853736961277A9B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C9541F0E3273999BE2EE3C /* Theme.swift */; };
 		40E13D54A46ACEA298483280 /* TagTestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63372EDA3DE15F6EDA9E721D /* TagTestDoubles.swift */; };
@@ -30,14 +28,12 @@
 		8B6177759889F7E9BF6B3BB2 /* CuffTagApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41395BD9E4024894725970D5 /* CuffTagApp.swift */; };
 		8F94511AD069402DCA2B55ED /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAA3472645B0D69BC3930FF /* RootView.swift */; };
 		957BD3A5013B10286AA3665A /* PhoneFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B01468F1BE68A4F7ED8DB6 /* PhoneFinder.swift */; };
-		99E900D553FBF5C5346F9E08 /* PodcastModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 680C3E8F3E1C48ED96116139 /* PodcastModels.swift */; };
 		9A9A0E468171F8F4F241C737 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D91721D391E78FB97790D6 /* CameraView.swift */; };
 		A3E0A4EB3F9C7B33F35332AE /* JacketSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02DC2343C613AFBE4E135D9 /* JacketSignal.swift */; };
 		A9BA10E134E87590F67D1091 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419607F742598A0445D2704 /* SettingsView.swift */; };
 		B432ED98DAD2D10F7823D7DC /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00C6C3DCF2FB1A6443D77B /* OnboardingView.swift */; };
 		C9A23133F27AB587A48DA4A8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D6D36E05E94FE32F8EAADFA5 /* PrivacyInfo.xcprivacy */; };
 		CF60CAF221933EBA251ABD91 /* GestureDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E59A46DB6331300C02269B3 /* GestureDemoUITests.swift */; };
-		D1FB62A8AEF595D2FF357D90 /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3861DD3BBC8325F854B637 /* NowPlayingView.swift */; };
 		D972878324A9956FD8AE2EEE /* SleeveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1521481C99A66E3FE6FF1D72 /* SleeveCamera.swift */; };
 		D99A9C773B2C85CBE67F6465 /* GestureSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D0A146EA6A25F8C89B4EC5 /* GestureSettings.swift */; };
 /* End PBXBuildFile section */
@@ -62,14 +58,12 @@
 /* Begin PBXFileReference section */
 		02DF9C8052A211353234F163 /* PodcastsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastsView.swift; sourceTree = "<group>"; };
 		1521481C99A66E3FE6FF1D72 /* SleeveCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleeveCamera.swift; sourceTree = "<group>"; };
-		1605633DB5FF61024E7C430C /* PodcastStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastStore.swift; sourceTree = "<group>"; };
 		16C9541F0E3273999BE2EE3C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		16FF2973BA125AA11F071F5C /* DesignAccessibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignAccessibilityTests.swift; sourceTree = "<group>"; };
 		1B27573BC3DCAB638B2B6FB9 /* JacketIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JacketIntents.swift; sourceTree = "<group>"; };
 		1FAA3472645B0D69BC3930FF /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		22E61CB08D2F4595DF4AAB32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		26237FDA419669F3B55C086E /* GesturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GesturesView.swift; sourceTree = "<group>"; };
-		2A3861DD3BBC8325F854B637 /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
 		2E52EEFAAD9969B0DC47DD5C /* ActionPerformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionPerformer.swift; sourceTree = "<group>"; };
 		3517DB4E9DC4DBF0AA1FCCD1 /* TagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagController.swift; sourceTree = "<group>"; };
 		3DB869C3D1F020621FE07FAC /* JacketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JacketView.swift; sourceTree = "<group>"; };
@@ -77,7 +71,6 @@
 		4DB82ACD15D7EAA3A9AC2800 /* AlertsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsView.swift; sourceTree = "<group>"; };
 		57D91721D391E78FB97790D6 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		63372EDA3DE15F6EDA9E721D /* TagTestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTestDoubles.swift; sourceTree = "<group>"; };
-		680C3E8F3E1C48ED96116139 /* PodcastModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModels.swift; sourceTree = "<group>"; };
 		71FE9D32B3DC3BDCCD34DF79 /* CuffTagTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CuffTagTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B77AC1AB4BB01763D13E9B5 /* CuffTagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuffTagTests.swift; sourceTree = "<group>"; };
 		82732C11C2ABAF199EE261AD /* CuffTagUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CuffTagUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,7 +87,6 @@
 		BD458A2F6B92641EC3F706E6 /* JacquardSDKiOS */ = {isa = PBXFileReference; lastKnownFileType = folder; name = JacquardSDKiOS; path = ../JacquardSDKiOS; sourceTree = SOURCE_ROOT; };
 		C23F1FB9713E253E26F3FAFA /* CuffTag.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CuffTag.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6D36E05E94FE32F8EAADFA5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		DEBA99F82EA58824F9CA1529 /* PodcastPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPlayer.swift; sourceTree = "<group>"; };
 		F419607F742598A0445D2704 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -165,7 +157,6 @@
 				10327221CE736F35D079E995 /* Camera */,
 				1BE3A0E21318429FBBEE022E /* Intents */,
 				102341DA253EE20651E76F7A /* Jacket */,
-				6D8650EDE3005A1A57611ACE /* Podcasts */,
 				452FC36D040A6D9F7E52274B /* Views */,
 			);
 			path = CuffTag;
@@ -188,7 +179,6 @@
 				26237FDA419669F3B55C086E /* GesturesView.swift */,
 				3DB869C3D1F020621FE07FAC /* JacketView.swift */,
 				83F1E745780C1F8BD70A33C3 /* LivingSleeve.swift */,
-				2A3861DD3BBC8325F854B637 /* NowPlayingView.swift */,
 				BB00C6C3DCF2FB1A6443D77B /* OnboardingView.swift */,
 				02DF9C8052A211353234F163 /* PodcastsView.swift */,
 				1FAA3472645B0D69BC3930FF /* RootView.swift */,
@@ -196,16 +186,6 @@
 				16C9541F0E3273999BE2EE3C /* Theme.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		6D8650EDE3005A1A57611ACE /* Podcasts */ = {
-			isa = PBXGroup;
-			children = (
-				680C3E8F3E1C48ED96116139 /* PodcastModels.swift */,
-				DEBA99F82EA58824F9CA1529 /* PodcastPlayer.swift */,
-				1605633DB5FF61024E7C430C /* PodcastStore.swift */,
-			);
-			path = Podcasts;
 			sourceTree = "<group>";
 		};
 		7DD4178AE63D3C1A1E66BEC3 /* Packages */ = {
@@ -401,12 +381,8 @@
 				0F65AE1AC381DD8C72FC362F /* LivingSleeve.swift in Sources */,
 				5123672BAB7965BE54441D5F /* MediaRouter.swift in Sources */,
 				5CB452581257E9203794C3D2 /* NotificationPermission.swift in Sources */,
-				D1FB62A8AEF595D2FF357D90 /* NowPlayingView.swift in Sources */,
 				B432ED98DAD2D10F7823D7DC /* OnboardingView.swift in Sources */,
 				957BD3A5013B10286AA3665A /* PhoneFinder.swift in Sources */,
-				99E900D553FBF5C5346F9E08 /* PodcastModels.swift in Sources */,
-				11971D9A4A2B5F6284698AF3 /* PodcastPlayer.swift in Sources */,
-				00BA097ED7E04A8FBEC1F658 /* PodcastStore.swift in Sources */,
 				52715A7EB13F3F908B55FDEA /* PodcastsView.swift in Sources */,
 				8F94511AD069402DCA2B55ED /* RootView.swift in Sources */,
 				A9BA10E134E87590F67D1091 /* SettingsView.swift in Sources */,

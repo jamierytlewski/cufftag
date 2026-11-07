@@ -83,7 +83,6 @@ struct AlertsView: View {
       .scrollIndicators(.hidden)
       .background(Theme.background)
       .navigationTitle("Alerts")
-      .withMiniPlayer()
     }
   }
 

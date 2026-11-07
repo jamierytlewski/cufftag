@@ -10,10 +10,8 @@ final class AppServices {
   static let shared = AppServices()
 
   let settings = GestureSettings()
-  let podcasts = PodcastStore()
   let volume = VolumeController()
   let tag = TagController()
-  let player: PodcastPlayer
   let media: MediaRouter
   let speech: SpeechAnnouncer
   let performer: ActionPerformer
@@ -21,14 +19,13 @@ final class AppServices {
   let camera: SleeveCamera
 
   private init() {
-    player = PodcastPlayer(store: podcasts, restorePlayback: false)
-    media = MediaRouter(player: player)
-    speech = SpeechAnnouncer(player: player)
-    finder = PhoneFinder(volume: volume, player: player)
+    media = MediaRouter()
+    speech = SpeechAnnouncer()
+    finder = PhoneFinder(volume: volume)
     camera = SleeveCamera(tag: tag)
     performer = ActionPerformer(
       settings: settings, media: media, speech: speech,
-      volume: volume, tag: tag, podcasts: podcasts, finder: finder)
+      volume: volume, tag: tag, finder: finder)
     tag.onGesture = { [weak performer] gesture in
       performer?.handle(gesture)
     }
@@ -38,7 +35,7 @@ final class AppServices {
   }
 }
 
-/// Seeds realistic connected-jacket, podcast, and camera showcase state when launched with `-appStoreDemo YES`.
+/// Seeds realistic connected-jacket and camera showcase state when launched with `-appStoreDemo YES`.
 @MainActor
 enum DemoContent {
   static var isEnabled: Bool {
@@ -184,8 +181,6 @@ struct CuffTagApp: App {
         .environmentObject(services.tag)
         .environmentObject(services.settings)
         .environmentObject(services.performer)
-        .environmentObject(services.podcasts)
-        .environmentObject(services.player)
         .environmentObject(services.media)
         .environmentObject(services.finder)
         .background(HiddenVolumeView(controller: services.volume).frame(width: 0, height: 0))

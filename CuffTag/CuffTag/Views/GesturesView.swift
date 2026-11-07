@@ -36,7 +36,6 @@ struct GesturesView: View {
       .scrollIndicators(.hidden)
       .background(Theme.background)
       .navigationTitle("Gestures")
-      .withMiniPlayer()
       .sheet(item: $editing) { target in
         ActionPickerSheet(
           gesture: target.gesture, shifted: target.shifted,
@@ -269,7 +268,7 @@ struct ActionPickerSheet: View {
       List {
         ForEach(ActionCategory.allCases) { category in
           Section(category.rawValue) {
-            ForEach(ActionKind.allCases.filter { $0.category == category && $0 != .nextEpisode && $0 != .bookmark }) { kind in
+            ForEach(ActionKind.allCases.filter { $0.category == category }) { kind in
               Button {
                 action.kind = kind
                 if let signature = kind.signature { tag.signal(signature) }

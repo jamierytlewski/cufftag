@@ -153,13 +153,11 @@ final class GestureDemoTests: XCTestCase {
     let settings = GestureSettings(defaults: defaults)
     settings.hapticConfirmation = false
     let tag = TagController(manager: TestJacquardManager(), defaults: defaults)
-    let store = PodcastStore()
-    let player = PodcastPlayer(store: store)
-    let media = MediaRouter(player: player)
+    let media = MediaRouter(defaults: defaults)
     let volume = VolumeController()
     let performer = ActionPerformer(
-      settings: settings, media: media, speech: SpeechAnnouncer(player: player),
-      volume: volume, tag: tag, podcasts: store, finder: PhoneFinder(volume: volume, player: player))
+      settings: settings, media: media, speech: SpeechAnnouncer(),
+      volume: volume, tag: tag, finder: PhoneFinder(volume: volume))
     return (performer, settings)
   }
 

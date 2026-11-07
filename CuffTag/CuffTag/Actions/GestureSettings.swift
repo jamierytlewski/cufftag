@@ -15,8 +15,6 @@ enum ActionKind: String, Codable, CaseIterable, Identifiable {
   case playPause
   case next
   case previous
-  case nextEpisode
-  case bookmark
   case volumeUp
   case volumeDown
   case speakNowPlaying
@@ -36,8 +34,6 @@ enum ActionKind: String, Codable, CaseIterable, Identifiable {
     case .playPause: return "Play / Pause"
     case .next: return "Next track · Skip 30s"
     case .previous: return "Previous track · Back 15s"
-    case .nextEpisode: return "Next episode"
-    case .bookmark: return "Bookmark this moment"
     case .volumeUp: return "Volume up"
     case .volumeDown: return "Volume down"
     case .speakNowPlaying: return "Say what's playing"
@@ -57,8 +53,6 @@ enum ActionKind: String, Codable, CaseIterable, Identifiable {
     case .playPause: return "playpause.fill"
     case .next: return "forward.fill"
     case .previous: return "backward.fill"
-    case .nextEpisode: return "forward.end.fill"
-    case .bookmark: return "bookmark.fill"
     case .volumeUp: return "speaker.plus.fill"
     case .volumeDown: return "speaker.minus.fill"
     case .speakNowPlaying: return "waveform"
@@ -74,7 +68,7 @@ enum ActionKind: String, Codable, CaseIterable, Identifiable {
 
   var category: ActionCategory {
     switch self {
-    case .none, .playPause, .next, .previous, .nextEpisode, .bookmark, .volumeUp, .volumeDown:
+    case .none, .playPause, .next, .previous, .volumeUp, .volumeDown:
       return .media
     case .speakNowPlaying, .speakTime, .speakBattery: return .voice
     case .findPhone, .openCamera, .nextProfile: return .jacket
@@ -86,9 +80,8 @@ enum ActionKind: String, Codable, CaseIterable, Identifiable {
   var signature: JacketSignal? {
     switch self {
     case .none, .playPause: return nil  // play/pause picks its own based on the result
-    case .next, .nextEpisode: return .skip
+    case .next: return .skip
     case .previous: return .back
-    case .bookmark: return .bookmark
     case .volumeUp, .volumeDown: return .volume
     case .speakNowPlaying, .speakTime, .speakBattery, .findPhone, .openCamera: return nil
     case .nextProfile: return .shift
@@ -122,9 +115,7 @@ struct GestureAction: Codable, Equatable {
     let values = try decoder.container(keyedBy: CodingKeys.self)
     kind = try values.decode(ActionKind.self, forKey: .kind)
     parameter = try values.decodeIfPresent(String.self, forKey: .parameter) ?? ""
-    // Keep the callback behavior of shortcuts assigned before this option existed.
-    returnToCuffTag = try values.decodeIfPresent(Bool.self, forKey: .returnToCuffTag)
-      ?? (kind == .runShortcut)
+    returnToCuffTag = try values.decodeIfPresent(Bool.self, forKey: .returnToCuffTag) ?? false
   }
 }
 
@@ -218,7 +209,7 @@ struct GestureProfile: Codable, Identifiable, Equatable {
     name: "Focus", symbol: "moon.stars.fill",
     base: [
       key(.doubleTap): .init(kind: .playPause),
-      key(.brushIn): .init(kind: .nextEpisode),
+      key(.brushIn): .init(kind: .next),
       key(.shortCover): .init(kind: .speakTime),
     ],
     shifted: [
@@ -261,14 +252,7 @@ final class GestureSettings: ObservableObject {
       loaded = saved
     }
     if loaded.isEmpty {
-      var everyday = GestureProfile.everyday
-      // Carry over mappings from the first version of the app.
-      if let data = defaults.data(forKey: "gestureActions.v1"),
-        let old = try? JSONDecoder().decode([String: GestureAction].self, from: data)
-      {
-        everyday.base = old
-      }
-      loaded = [everyday, .ride, .focus]
+      loaded = [.everyday, .ride, .focus]
     }
     profiles = loaded
     activeProfileID =

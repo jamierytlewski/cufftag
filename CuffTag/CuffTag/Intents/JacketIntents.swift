@@ -1,18 +1,12 @@
 import AppIntents
 import Foundation
 
-// Everything here runs in the app process (no extension), so the BLE connection, podcast player
-// and settings are shared with the app. With a free Apple ID this needs no extra entitlements.
+// Everything here runs in the app process (no extension), so the BLE connection and settings
+// are shared with the app. With a free Apple ID this needs no extra entitlements.
 
 struct JacketUnreachable: Error, CustomLocalizedStringResourceConvertible {
   var localizedStringResource: LocalizedStringResource {
     "Couldn't reach your jacket. Make sure the tag is charged and snapped in."
-  }
-}
-
-struct LegacyPodcastPlayerUnavailable: Error, CustomLocalizedStringResourceConvertible {
-  var localizedStringResource: LocalizedStringResource {
-    "CuffTag now keeps your library in Apple Podcasts. Use Apple's playback actions in Shortcuts instead of the old CuffTag player."
   }
 }
 
@@ -82,22 +76,6 @@ enum LightColor: String, AppEnum, CaseIterable {
     case .pink: return .pink
     }
   }
-}
-
-enum PodcastCommand: String, AppEnum, CaseIterable {
-  case playPause = "playPause"
-  case play = "play"
-  case pause = "pause"
-  case skipForward = "skipForward"
-  case skipBack = "skipBack"
-  case nextEpisode = "nextEpisode"
-  case bookmark = "bookmark"
-
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Podcast command"
-  static var caseDisplayRepresentations: [PodcastCommand: DisplayRepresentation] = [
-    .playPause: "Play/Pause", .play: "Play", .pause: "Pause", .skipForward: "Skip forward 30s",
-    .skipBack: "Back 15s", .nextEpisode: "Next episode", .bookmark: "Bookmark this moment",
-  ]
 }
 
 // MARK: - Profiles as entities
@@ -273,69 +251,6 @@ struct OpenSleeveCameraIntent: AppIntent {
   func perform() async throws -> some IntentResult {
     AppServices.shared.performer.cameraRequested = true
     return .result()
-  }
-}
-
-// MARK: - Podcast intents
-
-struct PodcastControlIntent: AudioPlaybackIntent {
-  static var title: LocalizedStringResource = "Control Podcast"
-  static var description = IntentDescription("Legacy CuffTag player action. Use Apple Podcasts playback actions in Shortcuts instead.")
-  static var isDiscoverable = false
-  static var supportedModes: IntentModes { .background }
-
-  @Parameter(title: "Command", default: .playPause) var command: PodcastCommand
-
-  static var parameterSummary: some ParameterSummary { Summary("\(\.$command) podcast") }
-
-  @MainActor
-  func perform() async throws -> some IntentResult {
-    let services = AppServices.shared
-    guard services.media.activeSource == .podcasts else { throw LegacyPodcastPlayerUnavailable() }
-    let player = services.player
-    services.media.activeSource = .podcasts
-    switch command {
-    case .playPause: player.togglePlayPause()
-    case .play: player.play()
-    case .pause: player.pause()
-    case .skipForward: player.skip(by: player.skipForwardSeconds)
-    case .skipBack: player.skip(by: -player.skipBackSeconds)
-    case .nextEpisode: player.playNextEpisode()
-    case .bookmark:
-      if let episode = player.episode {
-        services.podcasts.addBookmark(episode, at: player.currentTime)
-      }
-    }
-    return .result()
-  }
-}
-
-struct PlayLatestEpisodeIntent: AudioPlaybackIntent {
-  static var title: LocalizedStringResource = "Play Latest Episode"
-  static var description = IntentDescription(
-    "Play the newest unplayed episode, optionally from a specific show.")
-  static var supportedModes: IntentModes { .background }
-  static var isDiscoverable = false
-
-  @Parameter(title: "Show name") var show: String?
-
-  static var parameterSummary: some ParameterSummary { Summary("Play latest episode of \(\.$show)") }
-
-  @MainActor
-  func perform() async throws -> some IntentResult & ProvidesDialog {
-    let services = AppServices.shared
-    guard services.media.activeSource == .podcasts else { throw LegacyPodcastPlayerUnavailable() }
-    await services.podcasts.refreshIfStale()
-    let candidates = services.podcasts.upNext.filter { episode in
-      guard let show, !show.isEmpty else { return true }
-      return episode.podcastTitle.localizedCaseInsensitiveContains(show)
-    }
-    guard let episode = candidates.first else {
-      return .result(dialog: "There's nothing new to play.")
-    }
-    services.media.activeSource = .podcasts
-    services.player.play(episode)
-    return .result(dialog: "Playing \(episode.title).")
   }
 }
 

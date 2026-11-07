@@ -30,7 +30,6 @@ struct JacketView: View {
       }
       .scrollIndicators(.hidden)
       .background(Theme.background)
-      .withMiniPlayer()
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) {
           Button { showSettings = true } label: { Image(systemName: "gearshape.fill") }

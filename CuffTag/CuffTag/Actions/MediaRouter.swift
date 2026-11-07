@@ -4,7 +4,6 @@ import MediaPlayer
 import UIKit
 
 enum MediaSource: String, CaseIterable, Identifiable {
-  case podcasts
   case applePodcasts
   case appleMusic
 
@@ -12,21 +11,19 @@ enum MediaSource: String, CaseIterable, Identifiable {
   static let selectableSources: [MediaSource] = [.applePodcasts, .appleMusic]
   var title: String {
     switch self {
-    case .podcasts: return "CuffTag Podcasts"
     case .applePodcasts: return "Apple Podcasts via Shortcuts"
     case .appleMusic: return "Apple Music"
     }
   }
   var systemImage: String {
     switch self {
-    case .podcasts: return "mic.fill"
     case .applePodcasts: return "waveform.badge.mic"
     case .appleMusic: return "music.note"
     }
   }
 }
 
-/// Routes media gestures to whichever source is active (built-in podcasts, Apple Podcasts / Now Playing, or Apple Music).
+/// Routes media gestures to Apple Podcasts via Shortcuts or Apple Music.
 @MainActor
 final class MediaRouter: ObservableObject {
   enum ControlError: LocalizedError {
@@ -53,13 +50,11 @@ final class MediaRouter: ObservableObject {
     didSet { defaults.set(applePodcastsSkipBackShortcut, forKey: "applePodcastsSkipBackShortcut") }
   }
 
-  let player: PodcastPlayer
   private let defaults: UserDefaults
   private let music = MPMusicPlayerController.systemMusicPlayer
   private var bag = Set<AnyCancellable>()
 
-  init(player: PodcastPlayer, defaults: UserDefaults = .standard) {
-    self.player = player
+  init(defaults: UserDefaults = .standard) {
     self.defaults = defaults
     let savedSource = defaults.string(forKey: "activeSource").flatMap(MediaSource.init)
     activeSource = savedSource == .appleMusic ? .appleMusic : .applePodcasts
@@ -85,8 +80,6 @@ final class MediaRouter: ObservableObject {
 
   func playPause() throws {
     switch activeSource {
-    case .podcasts:
-      player.togglePlayPause()
     case .applePodcasts:
       throw ControlError.shortcutRequired
     case .appleMusic:
@@ -115,7 +108,6 @@ final class MediaRouter: ObservableObject {
 
   func next() throws {
     switch activeSource {
-    case .podcasts: player.skip(by: player.skipForwardSeconds)
     case .applePodcasts:
       throw ControlError.shortcutRequired
     case .appleMusic: music.skipToNextItem()
@@ -124,8 +116,6 @@ final class MediaRouter: ObservableObject {
 
   func previous() throws {
     switch activeSource {
-    case .podcasts:
-      player.skip(by: -player.skipBackSeconds)
     case .applePodcasts:
       throw ControlError.shortcutRequired
     case .appleMusic:
@@ -133,14 +123,8 @@ final class MediaRouter: ObservableObject {
     }
   }
 
-  func nextEpisode() {
-    activeSource = .podcasts
-    player.playNextEpisode()
-  }
-
   var isPlaying: Bool {
     switch activeSource {
-    case .podcasts: return player.isPlaying
     case .applePodcasts: return AVAudioSession.sharedInstance().isOtherAudioPlaying
     case .appleMusic: return music.playbackState == .playing
     }
@@ -148,14 +132,6 @@ final class MediaRouter: ObservableObject {
 
   var nowPlayingDescription: String? {
     switch activeSource {
-    case .podcasts:
-      guard let episode = player.episode else { return nil }
-      var text = "\(episode.title), from \(episode.podcastTitle)."
-      if player.duration > 0 {
-        let minutesLeft = Int((player.duration - player.currentTime) / 60 / Double(player.rate))
-        if minutesLeft > 0 { text += " \(minutesLeft) minutes left." }
-      }
-      return text
     case .applePodcasts:
       return "CuffTag cannot read what's playing in Apple Podcasts. Open that app to check playback."
     case .appleMusic:
@@ -178,35 +154,26 @@ final class MediaRouter: ObservableObject {
 @MainActor
 final class SpeechAnnouncer: NSObject, AVSpeechSynthesizerDelegate {
   private let synthesizer = AVSpeechSynthesizer()
-  private let player: PodcastPlayer
   private var ownsSession = false
 
-  init(player: PodcastPlayer) {
-    self.player = player
+  override init() {
     super.init()
     synthesizer.delegate = self
   }
 
   func speak(_ text: String) {
     synthesizer.stopSpeaking(at: .immediate)
-    if player.isPlaying {
-      // Our own podcast is playing: mix over it at reduced volume.
-      player.duck(true)
-    } else {
-      // Duck (not interrupt) other apps such as Apple Music.
-      let session = AVAudioSession.sharedInstance()
-      try? session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
-      try? session.setActive(true)
-      ownsSession = true
-    }
+    let session = AVAudioSession.sharedInstance()
+    try? session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+    try? session.setActive(true)
+    ownsSession = true
     let utterance = AVSpeechUtterance(string: text)
     utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 1.05
     synthesizer.speak(utterance)
   }
 
   private func finish() {
-    player.duck(false)
-    guard ownsSession, !player.isPlaying else { return }
+    guard ownsSession else { return }
     ownsSession = false
     try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
   }

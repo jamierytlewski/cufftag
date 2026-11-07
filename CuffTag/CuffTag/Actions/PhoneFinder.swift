@@ -9,11 +9,8 @@ final class PhoneFinder: ObservableObject {
   private var audioPlayer: AVAudioPlayer?
   private var previousVolume: Float?
   private let volume: VolumeController
-  private let player: PodcastPlayer
-
-  init(volume: VolumeController, player: PodcastPlayer) {
+  init(volume: VolumeController) {
     self.volume = volume
-    self.player = player
   }
 
   func ring(seconds: Double = 12) {
@@ -21,7 +18,6 @@ final class PhoneFinder: ObservableObject {
       stop()
       return
     }
-    player.pause()
     let session = AVAudioSession.sharedInstance()
     try? session.setCategory(.playback, mode: .default)
     try? session.setActive(true)
@@ -44,7 +40,7 @@ final class PhoneFinder: ObservableObject {
     if let previousVolume { volume.set(previousVolume) }
     previousVolume = nil
     isRinging = false
-    player.activateSession()
+    try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
   }
 
   private static let loopSeconds = 1.0

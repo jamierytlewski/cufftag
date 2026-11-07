@@ -25,7 +25,7 @@ behavior, camera capture and real playback still need the device checks below.
 - A charged Jacquard tag and compatible jacket. The SDK lists Levi's Trucker
   jackets, but this is not a guarantee for every Jacquard generation or firmware.
 - Apple's Shortcuts app if you want to run Shortcuts.
-- Internet access for Xcode's initial package downloads, podcast search/streaming,
+- Internet access for Xcode's initial package downloads, podcast streaming,
   Apple Music streaming and network automations.
 
 Clone the repository. It already keeps these folders together, and the Xcode
@@ -138,9 +138,7 @@ These are the initial **Everyday** profile mappings. Change them under **Gesture
 
 With Cover chords enabled, make the second gesture within about **1.4 seconds**.
 Turn that option off if you prefer Cover to act immediately. Ride and Focus
-profiles have their own mappings. Saved profiles keep their existing mappings;
-legacy CuffTag-player bookmark/next-episode mappings show an explanation and should
-be replaced in Gestures. Play/pause also requires a configured Shortcut when using
+profiles have their own mappings. Play/pause requires a configured Shortcut when using
 Apple Podcasts; it is not a direct locked-phone playback command.
 
 Brush Up and Brush Down are **experimental**, not additional gestures confirmed
@@ -175,9 +173,8 @@ unless Practice mode is on; their history entries are labeled **On-screen**.
 
 ## One podcast library: Apple Podcasts
 
-Your subscriptions and listening history stay in **Apple Podcasts**. CuffTag no
-longer exposes a second podcast library or restores its former player. Existing
-local CuffTag podcast data is preserved, not imported into Apple Podcasts or deleted.
+Your subscriptions and listening history stay in **Apple Podcasts**. CuffTag does
+not maintain a separate podcast library or player.
 
 Open **Podcasts** in CuffTag to configure three tested Shortcuts: Play / Pause,
 Seek Forward 30 seconds, and Seek Backward 15 seconds on Now Playing. Create them
