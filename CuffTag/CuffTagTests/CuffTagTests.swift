@@ -204,6 +204,54 @@ final class CuffTagTests: XCTestCase {
     XCTAssertFalse(camera.isCapturing)
   }
 
+  func testCameraCoverGestureStartsThreeSecondCountdownEvenWhenTimerIsOff() async {
+    let tag = TagController(manager: TestJacquardManager(), defaults: defaults)
+    let camera = SleeveCamera(tag: tag)
+    camera.enableDemoPreview(thumbnail: nil)
+    camera.timer = .off
+    XCTAssertTrue(camera.handle(.shortCover))
+    await drainMainQueue()
+    XCTAssertEqual(camera.countdown, 3)
+    camera.stop()
+  }
+
+  func testApplePodcastsSourceRequiresShortcutsWithoutControllingOtherPlayers() throws {
+    let store = PodcastStore()
+    let player = PodcastPlayer(store: store)
+    let media = MediaRouter(player: player, defaults: defaults)
+    media.activeSource = .podcasts
+    XCTAssertNil(media.externalSkipForwardShortcut)
+    XCTAssertNil(media.externalSkipBackShortcut)
+    XCTAssertNil(media.externalPlayPauseShortcut)
+
+    media.activeSource = .applePodcasts
+    media.applePodcastsSkipForwardShortcut = "Podcast Skip 30"
+    media.applePodcastsSkipBackShortcut = "Podcast Back 15"
+    media.applePodcastsPlayPauseShortcut = "  Podcast Play Pause \n"
+    XCTAssertEqual(media.externalPlayPauseShortcut, "Podcast Play Pause")
+    XCTAssertEqual(media.externalSkipForwardShortcut, "Podcast Skip 30")
+    XCTAssertEqual(media.externalSkipBackShortcut, "Podcast Back 15")
+    XCTAssertThrowsError(try media.playPause())
+    XCTAssertThrowsError(try media.next())
+    XCTAssertThrowsError(try media.previous())
+    media.applePodcastsPlayPauseShortcut = " \n "
+    XCTAssertNil(media.externalPlayPauseShortcut)
+    media.activeSource = .podcasts
+  }
+
+  func testMediaSourceKeepsOnePodcastLibraryAndPreservesShortcutSettings() {
+    defaults.set(MediaSource.podcasts.rawValue, forKey: "activeSource")
+    defaults.set("My Play Pause", forKey: "applePodcastsPlayPauseShortcut")
+    let player = PodcastPlayer(store: PodcastStore(), restorePlayback: false)
+    let media = MediaRouter(player: player, defaults: defaults)
+    XCTAssertEqual(media.activeSource, .applePodcasts)
+    XCTAssertEqual(media.externalPlayPauseShortcut, "My Play Pause")
+    XCTAssertFalse(MediaSource.selectableSources.contains(.podcasts))
+    XCTAssertNil(player.episode)
+    media.activeSource = .appleMusic
+    XCTAssertEqual(MediaRouter(player: player, defaults: defaults).activeSource, .appleMusic)
+  }
+
   func testFailedVideoCaptureReportsFailureInsteadOfSaving() async throws {
     let tag = TagController(manager: TestJacquardManager(), defaults: defaults)
     let camera = SleeveCamera(tag: tag)
@@ -226,7 +274,7 @@ final class CuffTagTests: XCTestCase {
     let tag = TagController(manager: TestJacquardManager(), defaults: defaults)
     let store = PodcastStore()
     let player = PodcastPlayer(store: store)
-    let media = MediaRouter(player: player)
+    let media = MediaRouter(player: player, defaults: defaults)
     let volume = VolumeController()
     let performer = ActionPerformer(
       settings: settings, media: media, speech: SpeechAnnouncer(player: player),

@@ -15,7 +15,13 @@ enum Theme {
   static var background: some View {
     ZStack {
       LinearGradient(colors: [denimTop, denimBottom], startPoint: .top, endPoint: .bottom)
-      DenimTwill().opacity(0.06)
+      RadialGradient(
+        colors: [glow.opacity(0.09), copper.opacity(0.05), .clear],
+        center: .init(x: 0.5, y: 0.08),
+        startRadius: 10,
+        endRadius: 420
+      )
+      DenimTwill().opacity(0.065)
     }
     .ignoresSafeArea()
   }
@@ -29,26 +35,36 @@ enum Theme {
   }
 }
 
-/// Diagonal twill weave texture.
+/// Diagonal twill weave texture with subtle warp & weft cross-grain.
 struct DenimTwill: View {
   var body: some View {
     Canvas { context, size in
-      var path = Path()
+      var twill = Path()
       let step: CGFloat = 5
       var x: CGFloat = -size.height
       while x < size.width {
-        path.move(to: CGPoint(x: x, y: size.height))
-        path.addLine(to: CGPoint(x: x + size.height, y: 0))
+        twill.move(to: CGPoint(x: x, y: size.height))
+        twill.addLine(to: CGPoint(x: x + size.height, y: 0))
         x += step
       }
-      context.stroke(path, with: .color(.white), lineWidth: 0.6)
+      context.stroke(twill, with: .color(.white), lineWidth: 0.6)
+
+      var weft = Path()
+      let weftStep: CGFloat = 14
+      var y: CGFloat = 0
+      while y < size.height {
+        weft.move(to: CGPoint(x: 0, y: y))
+        weft.addLine(to: CGPoint(x: size.width, y: y))
+        y += weftStep
+      }
+      context.stroke(weft, with: .color(.white.opacity(0.28)), style: StrokeStyle(lineWidth: 0.4, dash: [2, 6]))
     }
     .allowsHitTesting(false)
     .accessibilityHidden(true)
   }
 }
 
-/// Frosted card with a stitched (dashed copper) inner border.
+/// Frosted card with a stitched (dashed copper) inner border and subtle corner rivets.
 struct StitchedCard: ViewModifier {
   @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
   var padding: CGFloat = 18
@@ -59,15 +75,45 @@ struct StitchedCard: ViewModifier {
       .padding(padding)
       .frame(maxWidth: .infinity, alignment: .leading)
       .background(
-        reduceTransparency ? AnyShapeStyle(Theme.denimTop) : AnyShapeStyle(.ultraThinMaterial.opacity(0.55)),
+        reduceTransparency ? AnyShapeStyle(Theme.denimTop) : AnyShapeStyle(.ultraThinMaterial.opacity(0.58)),
         in: RoundedRectangle(cornerRadius: 24))
-      .background(Color.white.opacity(0.03), in: RoundedRectangle(cornerRadius: 24))
+      .background(
+        LinearGradient(
+          colors: [Color.white.opacity(0.055), Color.white.opacity(0.015)],
+          startPoint: .topLeading,
+          endPoint: .bottomTrailing
+        ),
+        in: RoundedRectangle(cornerRadius: 24)
+      )
       .overlay(
         RoundedRectangle(cornerRadius: 19)
           .inset(by: 5)
           .stroke(tint.opacity(0.45), style: StrokeStyle(lineWidth: 1, dash: [5, 4]))
       )
-      .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.white.opacity(0.06)))
+      .overlay(
+        RoundedRectangle(cornerRadius: 24)
+          .stroke(
+            LinearGradient(
+              colors: [Color.white.opacity(0.16), Color.white.opacity(0.04)],
+              startPoint: .top,
+              endPoint: .bottom
+            ),
+            lineWidth: 1
+          )
+      )
+      .shadow(color: .black.opacity(0.24), radius: 14, y: 6)
+  }
+}
+
+/// Subtle tactile press animation for interactive cards and tiles.
+struct TactileCardButtonStyle: ButtonStyle {
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .scaleEffect(configuration.isPressed && !reduceMotion ? 0.975 : 1)
+      .brightness(configuration.isPressed ? 0.04 : 0)
+      .animation(reduceMotion ? .easeOut(duration: 0.12) : .spring(duration: 0.22, bounce: 0.25), value: configuration.isPressed)
   }
 }
 
@@ -87,16 +133,26 @@ extension View {
 struct Rivet: View {
   var size: CGFloat = 12
   var body: some View {
-    Circle()
-      .fill(
-        RadialGradient(
-          colors: [Theme.copperLight, Theme.copper, Theme.copper.opacity(0.6)],
-          center: .init(x: 0.35, y: 0.3), startRadius: 0, endRadius: size * 0.6)
-      )
-      .overlay(Circle().stroke(Color.black.opacity(0.25), lineWidth: 0.5))
-      .frame(width: size, height: size)
-      .shadow(color: .black.opacity(0.4), radius: 1, y: 1)
-      .accessibilityHidden(true)
+    ZStack {
+      Circle()
+        .fill(
+          RadialGradient(
+            colors: [Theme.copperLight, Theme.copper, Theme.copper.opacity(0.65)],
+            center: .init(x: 0.35, y: 0.3), startRadius: 0, endRadius: size * 0.65)
+        )
+      Circle()
+        .stroke(Color.black.opacity(0.35), lineWidth: 0.6)
+      Circle()
+        .inset(by: size * 0.24)
+        .stroke(Color.white.opacity(0.28), lineWidth: 0.5)
+      Circle()
+        .fill(Theme.copperLight)
+        .frame(width: size * 0.26, height: size * 0.26)
+        .shadow(color: .black.opacity(0.45), radius: 0.5, y: 0.5)
+    }
+    .frame(width: size, height: size)
+    .shadow(color: .black.opacity(0.45), radius: 1.5, y: 1)
+    .accessibilityHidden(true)
   }
 }
 
@@ -120,8 +176,21 @@ struct CopperButtonStyle: ButtonStyle {
                 colors: [Theme.copperLight, Theme.copper], startPoint: .top, endPoint: .bottom))
             : AnyShapeStyle(Color.white.opacity(0.08)))
       )
-      .overlay(Capsule().stroke(Color.white.opacity(prominent ? 0.25 : 0.12)))
-      .opacity(isEnabled ? (configuration.isPressed ? 0.85 : 1) : 0.45)
+      .overlay(
+        Capsule().stroke(
+          LinearGradient(
+            colors: [
+              Color.white.opacity(prominent ? 0.38 : 0.18),
+              Color.white.opacity(prominent ? 0.12 : 0.06),
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+          ),
+          lineWidth: 1
+        )
+      )
+      .shadow(color: prominent ? Theme.copper.opacity(0.32) : .clear, radius: 10, y: 4)
+      .opacity(isEnabled ? (configuration.isPressed ? 0.88 : 1) : 0.45)
       .scaleEffect(configuration.isPressed && !reduceMotion ? 0.97 : 1)
       .animation(reduceMotion ? .easeOut(duration: 0.15) : .spring(duration: 0.25), value: configuration.isPressed)
   }
@@ -137,7 +206,25 @@ struct ProfileChip: View {
       .padding(.horizontal, 16).padding(.vertical, 10)
       .frame(minHeight: 44)
       .foregroundStyle(selected ? Color.black.opacity(0.85) : Theme.ink)
-      .background(Capsule().fill(selected ? Theme.copper : Color.white.opacity(0.07)))
+      .background(
+        Capsule().fill(
+          selected
+            ? AnyShapeStyle(
+              LinearGradient(
+                colors: [Theme.copperLight, Theme.copper],
+                startPoint: .top,
+                endPoint: .bottom
+              ))
+            : AnyShapeStyle(Color.white.opacity(0.07))
+        )
+      )
+      .overlay(
+        Capsule().stroke(
+          Color.white.opacity(selected ? 0.32 : 0.10),
+          lineWidth: 1
+        )
+      )
+      .shadow(color: selected ? Theme.copper.opacity(0.28) : .clear, radius: 8, y: 3)
       .accessibilityAddTraits(selected ? .isSelected : [])
   }
 }
@@ -149,15 +236,18 @@ struct BreathingDot: View {
   var color: Color
   var breathing = true
   @State private var phase = false
-  private var animating: Bool { breathing && !reduceMotion && scenePhase == .active }
+  private var animating: Bool {
+    breathing && !reduceMotion && scenePhase == .active && !DemoContent.isEnabled
+  }
 
   var body: some View {
     Circle()
       .fill(color)
       .frame(width: 9, height: 9)
+      .shadow(color: color.opacity(0.6), radius: 3)
       .background(
-        Circle().fill(color.opacity(0.45)).scaleEffect(phase ? 2.4 : 1)
-          .opacity(phase ? 0 : 0.8)
+        Circle().fill(color.opacity(0.45)).scaleEffect(phase ? 2.4 : 1.45)
+          .opacity(phase ? 0 : (DemoContent.isEnabled ? 0.55 : 0.8))
       )
       .animation(animating ? .easeOut(duration: 1.8).repeatForever(autoreverses: false) : nil, value: phase)
       .onChange(of: animating, initial: true) { _, value in phase = value }
@@ -181,18 +271,32 @@ struct BatteryRing: View {
 
   var body: some View {
     ZStack {
-      Circle().stroke(Color.white.opacity(0.1), lineWidth: 5)
+      Circle()
+        .fill(Color.white.opacity(0.04))
+      Circle()
+        .stroke(Color.white.opacity(0.1), lineWidth: 5)
       Circle()
         .trim(from: 0, to: fraction)
-        .stroke(color, style: StrokeStyle(lineWidth: 5, lineCap: .round))
+        .stroke(
+          AngularGradient(
+            colors: [color.opacity(0.75), color],
+            center: .center,
+            startAngle: .degrees(0),
+            endAngle: .degrees(360 * max(fraction, 0.05))
+          ),
+          style: StrokeStyle(lineWidth: 5, lineCap: .round)
+        )
         .rotationEffect(.degrees(-90))
         .shadow(color: color.opacity(0.6), radius: 4)
       VStack(spacing: 0) {
         if charging {
-          Image(systemName: "bolt.fill").font(.system(size: 10)).foregroundStyle(Theme.glow)
+          Image(systemName: "bolt.fill")
+            .font(.system(size: 10, weight: .bold))
+            .foregroundStyle(Theme.glow)
         }
         Text(level.map { "\($0)" } ?? "–")
           .font(.system(size: size * 0.3, weight: .semibold, design: .rounded).monospacedDigit())
+          .contentTransition(.numericText())
       }
     }
     .frame(width: size, height: size)

@@ -50,20 +50,77 @@ struct LivingSleeve: View {
   private func draw(in context: inout GraphicsContext, size: CGSize, now: Date) {
     let t = reduceMotion ? 0 : now.timeIntervalSinceReferenceDate
     let cuff = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+    let cuffRect = cuff.insetBy(dx: 2, dy: 2)
+    let cuffPath = Path(roundedRect: cuffRect, cornerRadius: 28)
 
-    // Denim cuff body.
-    let cuffPath = Path(roundedRect: cuff.insetBy(dx: 2, dy: 2), cornerRadius: 28)
+    // Denim cuff body with rich indigo gradient.
     context.fill(
       cuffPath,
       with: .linearGradient(
-        Gradient(colors: [Theme.denimBottom.opacity(0.9), Theme.denimTop]),
-        startPoint: .zero, endPoint: CGPoint(x: 0, y: size.height)))
-    context.stroke(
-      Path(roundedRect: cuff.insetBy(dx: 9, dy: 9), cornerRadius: 22),
-      with: .color(Theme.copper.opacity(0.55)), style: StrokeStyle(lineWidth: 1.2, dash: [6, 5]))
+        Gradient(colors: [
+          Theme.denimBottom.opacity(0.95),
+          Theme.denimTop,
+          Color(red: 0.035, green: 0.055, blue: 0.13),
+        ]),
+        startPoint: .zero,
+        endPoint: CGPoint(x: 0, y: size.height)
+      )
+    )
 
+    // Clipped interior twill texture and ambient glow.
+    var innerContext = context
+    innerContext.clip(to: cuffPath)
+
+    var twillPath = Path()
+    let twillStep: CGFloat = 6
+    var tx: CGFloat = -size.height
+    while tx < size.width {
+      twillPath.move(to: CGPoint(x: tx, y: size.height))
+      twillPath.addLine(to: CGPoint(x: tx + size.height, y: 0))
+      tx += twillStep
+    }
+    innerContext.stroke(twillPath, with: .color(.white.opacity(0.045)), lineWidth: 0.7)
+
+    let activeColor = shiftArmed ? Theme.shift : Theme.glow
     let elapsed = lastGesture.map { now.timeIntervalSince($0.date) } ?? 99
     let gesture = lastGesture?.gesture
+    let gestureFade = fade(elapsed, 1.2)
+
+    if connected || shiftArmed || gestureFade > 0 {
+      let bloomOpacity = max(connected ? 0.10 : 0.0, gestureFade * 0.22, shiftArmed ? 0.20 : 0)
+      let bloomCenter = CGPoint(x: size.width * 0.5, y: size.height * 0.5)
+      innerContext.fill(
+        cuffPath,
+        with: .radialGradient(
+          Gradient(colors: [activeColor.opacity(bloomOpacity), .clear]),
+          center: bloomCenter,
+          startRadius: 10,
+          endRadius: max(size.width, size.height) * 0.65
+        )
+      )
+    }
+
+    // Outer specular seam & inner copper chain-stitching.
+    context.stroke(
+      cuffPath,
+      with: .linearGradient(
+        Gradient(colors: [Color.white.opacity(0.22), Color.white.opacity(0.05)]),
+        startPoint: .zero,
+        endPoint: CGPoint(x: 0, y: size.height)
+      ),
+      lineWidth: 1.2
+    )
+    context.stroke(
+      Path(roundedRect: cuff.insetBy(dx: 9, dy: 9), cornerRadius: 22),
+      with: .color(Theme.copper.opacity(0.6)),
+      style: StrokeStyle(lineWidth: 1.2, dash: [6, 5])
+    )
+    context.stroke(
+      Path(roundedRect: cuff.insetBy(dx: 13, dy: 13), cornerRadius: 19),
+      with: .color(Theme.copper.opacity(0.28)),
+      style: StrokeStyle(lineWidth: 0.9, dash: [6, 5], dashPhase: 3)
+    )
+
     let margin: CGFloat = 34
     let spacing = (size.width - margin * 2) / CGFloat(threadCount - 1)
     let idleBreath = connected ? 0.18 + 0.1 * sin(t * 1.6) : 0.08
@@ -117,22 +174,49 @@ struct LivingSleeve: View {
       }
 
       let color = shiftArmed ? Theme.shift : Theme.glow
-      let glowWidth = 2 + 7 * energy
+      let glowWidth = 2.5 + 8 * energy
       context.stroke(
-        path, with: .color(color.opacity(0.35 * energy)), style: StrokeStyle(lineWidth: glowWidth, lineCap: .round))
+        path,
+        with: .color(color.opacity(0.38 * energy)),
+        style: StrokeStyle(lineWidth: glowWidth, lineCap: .round)
+      )
       context.stroke(
         path,
         with: .color(Theme.thread.blend(toward: color, energy)),
-        style: StrokeStyle(lineWidth: 1.6, lineCap: .round))
+        style: StrokeStyle(lineWidth: 1.7 + 0.6 * energy, lineCap: .round)
+      )
+
+      // Conductive copper-core filament highlight when energized.
+      if energy > 0.32 {
+        context.stroke(
+          path,
+          with: .color( Color.white.opacity((energy - 0.32) * 0.65) ),
+          style: StrokeStyle(lineWidth: 0.8, lineCap: .round, dash: [3, 9], dashPhase: CGFloat(t * 18 + Double(i) * 3))
+        )
+      }
     }
 
-    // Rivets at the cuff corners.
-    for point in [CGPoint(x: 18, y: 18), CGPoint(x: size.width - 18, y: 18),
-                  CGPoint(x: 18, y: size.height - 18), CGPoint(x: size.width - 18, y: size.height - 18)] {
-      let rect = CGRect(x: point.x - 5, y: point.y - 5, width: 10, height: 10)
-      context.fill(Path(ellipseIn: rect), with: .radialGradient(
-        Gradient(colors: [Theme.copperLight, Theme.copper]), center: CGPoint(x: rect.minX + 3.5, y: rect.minY + 3),
-        startRadius: 0, endRadius: 7))
+    // Stamped copper rivets at the cuff corners.
+    for point in [
+      CGPoint(x: 18, y: 18), CGPoint(x: size.width - 18, y: 18),
+      CGPoint(x: 18, y: size.height - 18), CGPoint(x: size.width - 18, y: size.height - 18),
+    ] {
+      let shadowRect = CGRect(x: point.x - 5.5, y: point.y - 4.5, width: 11, height: 11)
+      context.fill(Path(ellipseIn: shadowRect), with: .color(.black.opacity(0.45)))
+
+      let rect = CGRect(x: point.x - 5.5, y: point.y - 5.5, width: 11, height: 11)
+      context.fill(
+        Path(ellipseIn: rect),
+        with: .radialGradient(
+          Gradient(colors: [Theme.copperLight, Theme.copper, Theme.copper.opacity(0.75)]),
+          center: CGPoint(x: rect.minX + 3.5, y: rect.minY + 3.5),
+          startRadius: 0,
+          endRadius: 8
+        )
+      )
+      context.stroke(Path(ellipseIn: rect), with: .color(.black.opacity(0.35)), lineWidth: 0.6)
+      let innerPin = CGRect(x: point.x - 1.8, y: point.y - 1.8, width: 3.6, height: 3.6)
+      context.fill(Path(ellipseIn: innerPin), with: .color(Theme.copperLight))
     }
   }
 
@@ -175,13 +259,20 @@ struct SleeveTouchSurface: UIViewRepresentable {
     init(onGesture: @escaping (JQGesture) -> Void) { self.onGesture = onGesture }
 
     @objc func swipe(_ recognizer: UISwipeGestureRecognizer) {
+      UIImpactFeedbackGenerator(style: .light).impactOccurred()
       onGesture(recognizer.direction == .left ? .brushIn : .brushOut)
     }
 
-    @objc func doubleTap() { onGesture(.doubleTap) }
+    @objc func doubleTap() {
+      UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+      onGesture(.doubleTap)
+    }
 
     @objc func cover(_ recognizer: UILongPressGestureRecognizer) {
-      if recognizer.state == .began { onGesture(.shortCover) }
+      if recognizer.state == .began {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        onGesture(.shortCover)
+      }
     }
   }
 }

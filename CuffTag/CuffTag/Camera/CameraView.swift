@@ -13,10 +13,16 @@ struct CameraView: View {
   var body: some View {
     ZStack {
       Color.black.ignoresSafeArea()
-      CameraPreview(session: camera.session)
-        .ignoresSafeArea()
-        .scaleEffect(x: camera.position == .front ? -1 : 1, y: 1)
-        .accessibilityHidden(true)
+      if camera.isDemoPreview {
+        DemoCameraBackdrop(position: camera.position)
+          .ignoresSafeArea()
+          .accessibilityHidden(true)
+      } else {
+        CameraPreview(session: camera.session)
+          .ignoresSafeArea()
+          .scaleEffect(x: camera.position == .front ? -1 : 1, y: 1)
+          .accessibilityHidden(true)
+      }
 
       Color.white.opacity(flashOpacity).ignoresSafeArea().allowsHitTesting(false)
 
@@ -105,11 +111,12 @@ struct CameraView: View {
   }
 
   private var sleeveHints: some View {
-    HStack(spacing: 8) {
+    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8),
+                            count: typeSize.isAccessibilitySize ? 2 : 4), spacing: 8) {
       hint("hand.tap.fill", "Photo")
+      hint("hand.raised.fill", "3s Photo")
       hint("arrow.left.to.line", "Flip")
       hint("arrow.right.to.line", camera.isRecording ? "Stop" : "Video")
-      hint("hand.raised.fill", "Timer")
     }
     .opacity(tag.status.isConnected ? 1 : 0.4)
     .padding(.bottom, 12)
@@ -119,6 +126,8 @@ struct CameraView: View {
     VStack(spacing: 4) {
       Image(systemName: symbol).font(.footnote)
       Text(text).font(.caption2.weight(.semibold))
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
     }
     .frame(maxWidth: .infinity).padding(.vertical, 8)
     .background(Color.black.opacity(0.55), in: RoundedRectangle(cornerRadius: 12))
@@ -173,6 +182,47 @@ struct CameraView: View {
   }
 }
 
+/// Synthetic viewfinder backdrop used when capturing App Store screenshots on the Simulator.
+private struct DemoCameraBackdrop: View {
+  let position: AVCaptureDevice.Position
+
+  var body: some View {
+    ZStack {
+      LinearGradient(
+        colors: [
+          Color(red: 0.08, green: 0.14, blue: 0.28),
+          Color(red: 0.18, green: 0.26, blue: 0.42),
+          Color(red: 0.48, green: 0.34, blue: 0.28),
+          Color(red: 0.12, green: 0.16, blue: 0.26),
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+      )
+      // Subtle rule-of-thirds composition grid and focus reticle
+      GeometryReader { geo in
+        let w = geo.size.width
+        let h = geo.size.height
+        Path { p in
+          p.move(to: CGPoint(x: w / 3, y: 0))
+          p.addLine(to: CGPoint(x: w / 3, y: h))
+          p.move(to: CGPoint(x: w * 2 / 3, y: 0))
+          p.addLine(to: CGPoint(x: w * 2 / 3, y: h))
+          p.move(to: CGPoint(x: 0, y: h / 3))
+          p.addLine(to: CGPoint(x: w, y: h / 3))
+          p.move(to: CGPoint(x: 0, y: h * 2 / 3))
+          p.addLine(to: CGPoint(x: w, y: h * 2 / 3))
+        }
+        .stroke(Color.white.opacity(0.14), lineWidth: 0.8)
+
+        RoundedRectangle(cornerRadius: 16)
+          .stroke(Theme.copperLight.opacity(0.85), lineWidth: 1.5)
+          .frame(width: 116, height: 116)
+          .position(x: w * 0.5, y: h * 0.42)
+      }
+    }
+  }
+}
+
 struct CameraPreview: UIViewRepresentable {
   let session: AVCaptureSession
 
@@ -188,5 +238,7 @@ struct CameraPreview: UIViewRepresentable {
     return view
   }
 
-  func updateUIView(_ uiView: PreviewView, context: Context) {}
+  func updateUIView(_ uiView: PreviewView, context: Context) {
+    uiView.previewLayer.session = session
+  }
 }

@@ -57,6 +57,8 @@ targets:
       - package: JacquardSDK
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jamierytlewski.cufftag.tests
+        DEVELOPMENT_TEAM: D49TW4U996
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_VERSION: "5.0"
         CODE_SIGN_STYLE: Automatic
@@ -69,6 +71,8 @@ targets:
       - target: CuffTag
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jamierytlewski.cufftag.uitests
+        DEVELOPMENT_TEAM: D49TW4U996
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_VERSION: "5.0"
         CODE_SIGN_STYLE: Automatic

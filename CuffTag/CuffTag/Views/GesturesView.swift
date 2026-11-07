@@ -60,11 +60,11 @@ struct GesturesView: View {
           ForEach(settings.profiles) { profile in
             let active = profile.id == profileID
             Button {
-              withAnimation(reduceMotion ? nil : .spring) { settings.activeProfileID = profile.id }
+              withAnimation(reduceMotion ? nil : .spring(duration: 0.3)) { settings.activeProfileID = profile.id }
             } label: {
               ProfileChip(profile: profile, selected: active)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(TactileCardButtonStyle())
             .contextMenu {
               Button("Edit", systemImage: "pencil") { editingProfile = profile }
               if settings.profiles.count > 1 {
@@ -73,14 +73,21 @@ struct GesturesView: View {
             }
           }
           Button { editingProfile = settings.addProfile() } label: {
-            Image(systemName: "plus").frame(width: 44, height: 44).background(Circle().fill(Color.white.opacity(0.07)))
+            Image(systemName: "plus")
+              .frame(width: 44, height: 44)
+              .background(Circle().fill(Color.white.opacity(0.07)))
+              .overlay(Circle().stroke(Color.white.opacity(0.12), lineWidth: 1))
           }
           .accessibilityLabel("Add profile")
           Button { editingProfile = settings.activeProfile } label: {
-            Image(systemName: "pencil").frame(width: 44, height: 44).background(Circle().fill(Color.white.opacity(0.07)))
+            Image(systemName: "pencil")
+              .frame(width: 44, height: 44)
+              .background(Circle().fill(Color.white.opacity(0.07)))
+              .overlay(Circle().stroke(Color.white.opacity(0.12), lineWidth: 1))
           }
           .accessibilityLabel("Edit active profile")
         }
+        .padding(.vertical, 2)
       }
       .scrollIndicators(.hidden)
       Text("Switch from here, from a Shortcut, or with a gesture. Long-press a profile to edit.")
@@ -101,7 +108,7 @@ struct GesturesView: View {
               note: !shifted && gesture == .shortCover && settings.coverIsShift
                 ? "Or hold off ~1 s — Cover then another gesture is a chord" : nil)
           }
-          .buttonStyle(.plain)
+          .buttonStyle(TactileCardButtonStyle())
         }
       }
     }
@@ -134,7 +141,7 @@ struct GesturesView: View {
           Button { editing = EditTarget(gesture: gesture, shifted: false) } label: {
             GestureRow(gesture: gesture, action: settings.action(for: gesture), shifted: false, note: nil)
           }
-          .buttonStyle(.plain)
+          .buttonStyle(TactileCardButtonStyle())
         }
       }
       .padding(.top, 8)
@@ -159,7 +166,7 @@ struct GesturesView: View {
         Toggle(isOn: $settings.spokenConfirmation) {
           VStack(alignment: .leading, spacing: 2) {
             Text("Spoken confirmation")
-            Text("Briefly says “Paused”, “Bookmarked”, the next episode…").font(.caption).foregroundStyle(Theme.muted)
+            Text("Speaks confirmations for actions CuffTag can verify. Shortcut requests do not confirm external playback.").font(.caption).foregroundStyle(Theme.muted)
           }
         }
       }
@@ -191,11 +198,16 @@ struct GestureRow: View {
   let shifted: Bool
   let note: String?
 
+  private var accent: Color { shifted ? Theme.shift : Theme.glow }
+
   var body: some View {
     (typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12)) : AnyLayout(HStackLayout(spacing: 14))) {
       ZStack {
-        Circle().fill((shifted ? Theme.shift : Theme.glow).opacity(0.12))
-        Image(systemName: gesture.symbol).foregroundStyle(shifted ? Theme.shift : Theme.glow)
+        Circle().fill(accent.opacity(0.14))
+        Circle().stroke(accent.opacity(0.28), lineWidth: 1)
+        Image(systemName: gesture.symbol)
+          .font(.callout.weight(.semibold))
+          .foregroundStyle(accent)
       }
       .frame(width: 44, height: 44)
       VStack(alignment: .leading, spacing: 3) {
@@ -203,18 +215,44 @@ struct GestureRow: View {
         Text(note ?? gesture.hint).font(.caption).foregroundStyle(Theme.muted)
       }
       if !typeSize.isAccessibilitySize { Spacer() }
-      VStack(alignment: typeSize.isAccessibilitySize ? .leading : .trailing, spacing: 3) {
-        Image(systemName: action.kind.systemImage).foregroundStyle(Theme.copperLight)
-        Text(action.kind == .runShortcut && !action.parameter.isEmpty ? action.parameter : action.kind.title)
-          .font(.caption.weight(.semibold)).foregroundStyle(Theme.ink)
-          .multilineTextAlignment(typeSize.isAccessibilitySize ? .leading : .trailing)
-          .lineLimit(typeSize.isAccessibilitySize ? nil : 2)
+      HStack(spacing: 8) {
+        VStack(alignment: typeSize.isAccessibilitySize ? .leading : .trailing, spacing: 3) {
+          Image(systemName: action.kind.systemImage).foregroundStyle(Theme.copperLight)
+          Text(action.kind == .runShortcut && !action.parameter.isEmpty ? action.parameter : action.kind.title)
+            .font(.caption.weight(.semibold)).foregroundStyle(Theme.ink)
+            .multilineTextAlignment(typeSize.isAccessibilitySize ? .leading : .trailing)
+            .lineLimit(typeSize.isAccessibilitySize ? nil : 2)
+        }
+        if !typeSize.isAccessibilitySize {
+          Image(systemName: "chevron.right")
+            .font(.caption2.weight(.semibold))
+            .foregroundStyle(Theme.muted.opacity(0.7))
+        }
       }
-      .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : 130, alignment: typeSize.isAccessibilitySize ? .leading : .trailing)
+      .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : 142, alignment: typeSize.isAccessibilitySize ? .leading : .trailing)
     }
     .padding(14)
-    .background(RoundedRectangle(cornerRadius: 18).fill(Color.white.opacity(0.06)))
-    .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.08)))
+    .background(
+      RoundedRectangle(cornerRadius: 18)
+        .fill(
+          LinearGradient(
+            colors: [Color.white.opacity(0.075), Color.white.opacity(0.04)],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+          )
+        )
+    )
+    .overlay(
+      RoundedRectangle(cornerRadius: 18)
+        .stroke(
+          LinearGradient(
+            colors: [Color.white.opacity(0.15), Color.white.opacity(0.05)],
+            startPoint: .top,
+            endPoint: .bottom
+          ),
+          lineWidth: 1
+        )
+    )
   }
 }
 
@@ -231,7 +269,7 @@ struct ActionPickerSheet: View {
       List {
         ForEach(ActionCategory.allCases) { category in
           Section(category.rawValue) {
-            ForEach(ActionKind.allCases.filter { $0.category == category }) { kind in
+            ForEach(ActionKind.allCases.filter { $0.category == category && $0 != .nextEpisode && $0 != .bookmark }) { kind in
               Button {
                 action.kind = kind
                 if let signature = kind.signature { tag.signal(signature) }
@@ -310,6 +348,14 @@ struct ProfileEditor: View {
   var body: some View {
     NavigationStack {
       Form {
+        Section {
+          HStack {
+            Spacer()
+            ProfileChip(profile: profile, selected: true)
+            Spacer()
+          }
+          .listRowBackground(Color.clear)
+        }
         TextField("Name", text: $profile.name)
         Section("Icon") {
           LazyVGrid(columns: [GridItem(.adaptive(minimum: typeSize.isAccessibilitySize ? 64 : 48), spacing: 12)], spacing: 14) {
@@ -319,7 +365,14 @@ struct ProfileEditor: View {
                   .font(.title3)
                   .frame(minWidth: 48, minHeight: 48)
                   .foregroundStyle(profile.symbol == item.symbol ? Color.black.opacity(0.85) : Theme.ink)
-                  .background(Circle().fill(profile.symbol == item.symbol ? Theme.copper : Color.white.opacity(0.06)))
+                  .background(
+                    Circle().fill(
+                      profile.symbol == item.symbol
+                        ? AnyShapeStyle(LinearGradient(colors: [Theme.copperLight, Theme.copper], startPoint: .top, endPoint: .bottom))
+                        : AnyShapeStyle(Color.white.opacity(0.06))
+                    )
+                  )
+                  .overlay(Circle().stroke(Color.white.opacity(profile.symbol == item.symbol ? 0.3 : 0.08), lineWidth: 1))
                   .contentShape(Rectangle())
               }
               .buttonStyle(.plain)

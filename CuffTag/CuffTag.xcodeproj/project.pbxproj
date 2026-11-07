@@ -78,9 +78,9 @@
 		57D91721D391E78FB97790D6 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		63372EDA3DE15F6EDA9E721D /* TagTestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTestDoubles.swift; sourceTree = "<group>"; };
 		680C3E8F3E1C48ED96116139 /* PodcastModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastModels.swift; sourceTree = "<group>"; };
-		71FE9D32B3DC3BDCCD34DF79 /* CuffTagTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CuffTagTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		71FE9D32B3DC3BDCCD34DF79 /* CuffTagTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CuffTagTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B77AC1AB4BB01763D13E9B5 /* CuffTagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuffTagTests.swift; sourceTree = "<group>"; };
-		82732C11C2ABAF199EE261AD /* CuffTagUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CuffTagUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		82732C11C2ABAF199EE261AD /* CuffTagUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CuffTagUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		83F1E745780C1F8BD70A33C3 /* LivingSleeve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivingSleeve.swift; sourceTree = "<group>"; };
 		86D0A146EA6A25F8C89B4EC5 /* GestureSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureSettings.swift; sourceTree = "<group>"; };
 		8E59A46DB6331300C02269B3 /* GestureDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureDemoUITests.swift; sourceTree = "<group>"; };
@@ -92,8 +92,8 @@
 		BB00C6C3DCF2FB1A6443D77B /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BC024C6E204F64C761006FB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BD458A2F6B92641EC3F706E6 /* JacquardSDKiOS */ = {isa = PBXFileReference; lastKnownFileType = folder; name = JacquardSDKiOS; path = ../JacquardSDKiOS; sourceTree = SOURCE_ROOT; };
-		C23F1FB9713E253E26F3FAFA /* CuffTag.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CuffTag.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D6D36E05E94FE32F8EAADFA5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		C23F1FB9713E253E26F3FAFA /* CuffTag.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CuffTag.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6D36E05E94FE32F8EAADFA5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		DEBA99F82EA58824F9CA1529 /* PodcastPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPlayer.swift; sourceTree = "<group>"; };
 		F419607F742598A0445D2704 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -324,7 +324,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 2720;
 				TargetAttributes = {
 					245EB41FB59F4CA66D423DD4 = {
 						ProvisioningStyle = Automatic;
@@ -449,7 +449,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = D49TW4U996;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CuffTag/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -457,6 +456,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.cufftag;
+				PRODUCT_NAME = CuffTag;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -474,7 +474,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.CuffTagTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.cufftag.tests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -489,7 +489,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = D49TW4U996;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CuffTag/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -497,6 +496,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.cufftag;
+				PRODUCT_NAME = CuffTag;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -514,7 +514,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.CuffTagUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.cufftag.uitests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -533,7 +533,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.CuffTagUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.cufftag.uitests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -576,8 +576,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = D49TW4U996;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -591,6 +593,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -608,7 +611,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.CuffTagTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamierytlewski.cufftag.tests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -651,8 +654,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = D49TW4U996;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -673,6 +678,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;

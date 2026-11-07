@@ -129,16 +129,19 @@ These are the initial **Everyday** profile mappings. Change them under **Gesture
 | Sleeve gesture | Action |
 |---|---|
 | Double Tap | Play/pause |
-| Brush In | Skip forward 30 seconds in CuffTag podcasts; next Apple Music track |
-| Brush Out | Back 15 seconds in CuffTag podcasts; restart/previous Apple Music track |
-| Cover | Say what's playing, after the Cover-chord window |
-| Cover, then Double Tap | Bookmark the current CuffTag podcast position |
+| Brush In | Request the Skip 30s Shortcut for Apple Podcasts; next Apple Music track |
+| Brush Out | Request the Back 15s Shortcut for Apple Podcasts; restart/previous Apple Music track |
+| Cover | Say the time, after the Cover-chord window |
+| Cover, then Double Tap | Say jacket battery |
 | Cover, then Brush In | Volume up |
 | Cover, then Brush Out | Volume down |
 
 With Cover chords enabled, make the second gesture within about **1.4 seconds**.
 Turn that option off if you prefer Cover to act immediately. Ride and Focus
-profiles have their own mappings.
+profiles have their own mappings. Saved profiles keep their existing mappings;
+legacy CuffTag-player bookmark/next-episode mappings show an explanation and should
+be replaced in Gestures. Play/pause also requires a configured Shortcut when using
+Apple Podcasts; it is not a direct locked-phone playback command.
 
 Brush Up and Brush Down are **experimental**, not additional gestures confirmed
 for this jacket. Alerts are outgoing vibrations/lights, not an input gesture.
@@ -170,24 +173,28 @@ restores normal behavior and leaves your previous Practice mode setting intact.
 Outside the demo, the existing gesture tiles still run their mapped actions
 unless Practice mode is on; their history entries are labeled **On-screen**.
 
-## Podcasts and Apple Music
+## One podcast library: Apple Podcasts
 
-- **Podcasts > + / Add a show:** search for a public podcast or enter its RSS feed.
-  Start an episode in CuffTag, then use the sleeve. The player supports progress,
-  playback speed, skipping and timestamp bookmarks.
-- **Jacket > Settings > Media gestures control:** choose Podcasts or Apple Music.
-  Start a track in Apple's Music app and grant media-library permission if requested.
-  The selected source can also follow playback activity.
+Your subscriptions and listening history stay in **Apple Podcasts**. CuffTag no
+longer exposes a second podcast library or restores its former player. Existing
+local CuffTag podcast data is preserved, not imported into Apple Podcasts or deleted.
 
-CuffTag does **not** remotely control the Apple Podcasts app, import its private
-library or sync its listening position. It has its own podcast player because
-iOS does not provide a general public API for controlling another podcast app.
-The same limitation applies to Spotify. Public podcast feeds normally provide
-the same episodes, but subscriptions and listening history are separate.
+Open **Podcasts** in CuffTag to configure three tested Shortcuts: Play / Pause,
+Seek Forward 30 seconds, and Seek Backward 15 seconds on Now Playing. Create them
+in Apple's Shortcuts app, test them with Apple Podcasts playing, and enter their
+exact names. Available actions and behavior depend on iOS and the playing app.
+Use **Open Apple Podcasts** to browse or listen in your existing library.
 
-Background playback, Apple Music commands and system-volume changes need testing
-on your iPhone and audio route. The presence of the Bluetooth/audio background
-modes is not a guarantee of unrestricted background execution.
+**Jacket > Settings > Media gestures control** defaults to **Apple Podcasts via
+Shortcuts**. Apple Music remains an alternative using its system music player.
+CuffTag cannot directly read or control Apple Podcasts' private playback state.
+Audio-session interruptions are not reliable remote play/pause commands.
+
+With CuffTag foreground, playback gestures open Shortcuts. In the background or
+while locked, they request a notification: tap it and unlock if asked. Notification
+delivery and successful execution are not guaranteed. Opening Shortcuts is not
+proof that playback changed. Apple Music commands and system-volume changes still
+need testing on your iPhone and audio route.
 
 ## Shortcuts, including Segway Mobility
 
@@ -238,7 +245,7 @@ unlock or operate the scooter.
 ### Shortcuts can signal the jacket, too
 
 Under Shortcuts actions, look for **CuffTag**. Actions include **Signal My Jacket**,
-**Get Jacket Battery**, **Set Gesture Profile**, podcast commands and opening
+**Get Jacket Battery**, **Set Gesture Profile** and opening
 Sleeve Camera. The **Alerts** tab contains personal-automation recipes.
 
 For example, a supported Message automation can invoke **Signal My Jacket**.
@@ -255,7 +262,7 @@ Keep CuffTag's camera visible and the phone unlocked.
 | Double Tap | Take a photo |
 | Brush In | Flip front/back camera |
 | Brush Out | Start/stop video |
-| Cover | Cycle timer: off, 3 seconds, 10 seconds |
+| Cover | Take a countdown photo: 3 seconds when timer is off, otherwise the selected timer |
 
 Allow Camera and Photos access; allow Microphone for video sound.
 Captures are saved to Photos. A failed save shows an error and offers **Retry save**
@@ -298,8 +305,9 @@ Before relying on the jacket:
 1. Confirm Connected, attached gear and a battery reading.
 2. Physically perform each of the four gestures, without tapping the practice tiles.
    Confirm they appear under Recently.
-3. Play a podcast in CuffTag. Check play/pause and both skips, then repeat with the
-   screen locked and headphones connected.
+3. Play a podcast in Apple Podcasts. Test all three configured Shortcuts manually,
+   then from sleeve gestures in CuffTag. With the screen locked, check that tapping
+   the notification and unlocking runs the requested Shortcut.
 4. Test Apple Music separately, including background behavior.
 5. Test the tag light and cuff vibration.
 6. Run your chosen Shortcut manually, then from a sleeve gesture in foreground,

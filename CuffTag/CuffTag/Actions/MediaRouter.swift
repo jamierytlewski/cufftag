@@ -5,31 +5,70 @@ import UIKit
 
 enum MediaSource: String, CaseIterable, Identifiable {
   case podcasts
+  case applePodcasts
   case appleMusic
 
   var id: String { rawValue }
-  var title: String { self == .podcasts ? "Podcasts" : "Apple Music" }
-  var systemImage: String { self == .podcasts ? "mic.fill" : "music.note" }
+  static let selectableSources: [MediaSource] = [.applePodcasts, .appleMusic]
+  var title: String {
+    switch self {
+    case .podcasts: return "CuffTag Podcasts"
+    case .applePodcasts: return "Apple Podcasts via Shortcuts"
+    case .appleMusic: return "Apple Music"
+    }
+  }
+  var systemImage: String {
+    switch self {
+    case .podcasts: return "mic.fill"
+    case .applePodcasts: return "waveform.badge.mic"
+    case .appleMusic: return "music.note"
+    }
+  }
 }
 
-/// Routes media gestures to whichever source is active (built-in podcasts or Apple Music).
+/// Routes media gestures to whichever source is active (built-in podcasts, Apple Podcasts / Now Playing, or Apple Music).
 @MainActor
 final class MediaRouter: ObservableObject {
-  @Published var activeSource: MediaSource {
-    didSet {
-      UserDefaults.standard.set(activeSource.rawValue, forKey: "activeSource")
-      if activeSource == .appleMusic { requestMusicAccessIfNeeded() }
+  enum ControlError: LocalizedError {
+    case shortcutRequired
+
+    var errorDescription: String? {
+      "Configure a Shortcut in Settings to control Apple Podcasts. CuffTag cannot control another app's playback directly."
     }
   }
 
+  @Published var activeSource: MediaSource {
+    didSet {
+      defaults.set(activeSource.rawValue, forKey: "activeSource")
+      if activeSource == .appleMusic { requestMusicAccessIfNeeded() }
+    }
+  }
+  @Published var applePodcastsPlayPauseShortcut: String {
+    didSet { defaults.set(applePodcastsPlayPauseShortcut, forKey: "applePodcastsPlayPauseShortcut") }
+  }
+  @Published var applePodcastsSkipForwardShortcut: String {
+    didSet { defaults.set(applePodcastsSkipForwardShortcut, forKey: "applePodcastsSkipForwardShortcut") }
+  }
+  @Published var applePodcastsSkipBackShortcut: String {
+    didSet { defaults.set(applePodcastsSkipBackShortcut, forKey: "applePodcastsSkipBackShortcut") }
+  }
+
   let player: PodcastPlayer
+  private let defaults: UserDefaults
   private let music = MPMusicPlayerController.systemMusicPlayer
   private var bag = Set<AnyCancellable>()
 
-  init(player: PodcastPlayer) {
+  init(player: PodcastPlayer, defaults: UserDefaults = .standard) {
     self.player = player
-    activeSource =
-      UserDefaults.standard.string(forKey: "activeSource").flatMap(MediaSource.init) ?? .podcasts
+    self.defaults = defaults
+    let savedSource = defaults.string(forKey: "activeSource").flatMap(MediaSource.init)
+    activeSource = savedSource == .appleMusic ? .appleMusic : .applePodcasts
+    applePodcastsPlayPauseShortcut =
+      defaults.string(forKey: "applePodcastsPlayPauseShortcut") ?? ""
+    applePodcastsSkipForwardShortcut =
+      defaults.string(forKey: "applePodcastsSkipForwardShortcut") ?? "Podcast Skip 30"
+    applePodcastsSkipBackShortcut =
+      defaults.string(forKey: "applePodcastsSkipBackShortcut") ?? "Podcast Back 15"
 
     music.beginGeneratingPlaybackNotifications()
     NotificationCenter.default.publisher(
@@ -37,37 +76,58 @@ final class MediaRouter: ObservableObject {
     )
     .receive(on: DispatchQueue.main)
     .sink { [weak self] _ in
-      guard let self, self.music.playbackState == .playing else { return }
+      guard let self, self.activeSource != .applePodcasts, self.music.playbackState == .playing else { return }
       self.activeSource = .appleMusic
     }
     .store(in: &bag)
 
-    player.$isPlaying
-      .filter { $0 }
-      .sink { [weak self] _ in self?.activeSource = .podcasts }
-      .store(in: &bag)
   }
 
-  func playPause() {
+  func playPause() throws {
     switch activeSource {
     case .podcasts:
       player.togglePlayPause()
+    case .applePodcasts:
+      throw ControlError.shortcutRequired
     case .appleMusic:
       music.playbackState == .playing ? music.pause() : music.play()
     }
   }
 
-  func next() {
+  var externalPlayPauseShortcut: String? {
+    guard activeSource == .applePodcasts else { return nil }
+    let trimmed = applePodcastsPlayPauseShortcut.trimmingCharacters(in: .whitespacesAndNewlines)
+    return trimmed.isEmpty ? nil : trimmed
+  }
+
+  /// If `.applePodcasts` is selected and a Shortcut is configured for Skip/Back, returns its name.
+  var externalSkipForwardShortcut: String? {
+    guard activeSource == .applePodcasts else { return nil }
+    let trimmed = applePodcastsSkipForwardShortcut.trimmingCharacters(in: .whitespacesAndNewlines)
+    return trimmed.isEmpty ? nil : trimmed
+  }
+
+  var externalSkipBackShortcut: String? {
+    guard activeSource == .applePodcasts else { return nil }
+    let trimmed = applePodcastsSkipBackShortcut.trimmingCharacters(in: .whitespacesAndNewlines)
+    return trimmed.isEmpty ? nil : trimmed
+  }
+
+  func next() throws {
     switch activeSource {
     case .podcasts: player.skip(by: player.skipForwardSeconds)
+    case .applePodcasts:
+      throw ControlError.shortcutRequired
     case .appleMusic: music.skipToNextItem()
     }
   }
 
-  func previous() {
+  func previous() throws {
     switch activeSource {
     case .podcasts:
       player.skip(by: -player.skipBackSeconds)
+    case .applePodcasts:
+      throw ControlError.shortcutRequired
     case .appleMusic:
       music.currentPlaybackTime > 3 ? music.skipToBeginning() : music.skipToPreviousItem()
     }
@@ -79,7 +139,11 @@ final class MediaRouter: ObservableObject {
   }
 
   var isPlaying: Bool {
-    activeSource == .podcasts ? player.isPlaying : music.playbackState == .playing
+    switch activeSource {
+    case .podcasts: return player.isPlaying
+    case .applePodcasts: return AVAudioSession.sharedInstance().isOtherAudioPlaying
+    case .appleMusic: return music.playbackState == .playing
+    }
   }
 
   var nowPlayingDescription: String? {
@@ -92,6 +156,8 @@ final class MediaRouter: ObservableObject {
         if minutesLeft > 0 { text += " \(minutesLeft) minutes left." }
       }
       return text
+    case .applePodcasts:
+      return "CuffTag cannot read what's playing in Apple Podcasts. Open that app to check playback."
     case .appleMusic:
       guard MPMediaLibrary.authorizationStatus() == .authorized,
         let item = music.nowPlayingItem, let title = item.title

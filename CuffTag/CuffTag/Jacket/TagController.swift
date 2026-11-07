@@ -77,6 +77,7 @@ final class TagController: ObservableObject {
   private var currentTag: ConnectedTag?
   private var centralPoweredOn = false
   private var scanningRequested = false
+  private var isDemoMode = false
 
   init(manager suppliedManager: JacquardManager? = nil, defaults: UserDefaults = .standard) {
     self.defaults = defaults
@@ -110,6 +111,25 @@ final class TagController: ObservableObject {
           DiscoveredTag(id: tag.identifier, name: tag.displayName, tag: tag, alreadyConnected: false))
       }
       .store(in: &bag)
+  }
+
+  /// Populates connected hardware state for App Store screenshots, video capture, or simulator showcase.
+  func enableDemoMode(
+    gearName: String,
+    tagName: String,
+    firmwareVersion: String,
+    batteryLevel: Int,
+    recentGestures: [GestureEvent]
+  ) {
+    isDemoMode = true
+    status = .connected
+    self.gearName = gearName
+    self.tagName = tagName
+    self.firmwareVersion = firmwareVersion
+    self.batteryLevel = batteryLevel
+    self.isCharging = false
+    self.recentGestures = recentGestures
+    self.lastGesture = recentGestures.first
   }
 
   // MARK: - Pairing
@@ -147,6 +167,7 @@ final class TagController: ObservableObject {
   }
 
   func forgetTag() {
+    isDemoMode = false
     if let id = savedTagID { disconnect(id) }
     connectionCancellable?.cancel()
     connectionCancellable = nil
@@ -158,13 +179,14 @@ final class TagController: ObservableObject {
   // MARK: - Connection
 
   func reconnectSavedTag() {
+    guard !isDemoMode else { return }
     guard centralPoweredOn, let id = savedTagID, connectionCancellable == nil else { return }
     connect(manager.connect(id), tagID: id, label: "Looking for your jacket…")
   }
 
   /// Waits (e.g. when launched in the background by a Shortcut) for the jacket to connect.
   func waitUntilConnected(timeout: TimeInterval = 8) async -> Bool {
-    if currentTag != nil { return true }
+    if isDemoMode || currentTag != nil { return true }
     reconnectSavedTag()
     let deadline = Date().addingTimeInterval(timeout)
     while Date() < deadline {
@@ -181,6 +203,7 @@ final class TagController: ObservableObject {
   }
 
   private func handleCentralState(_ state: CBManagerState) {
+    guard !isDemoMode else { return }
     switch state {
     case .poweredOn:
       centralPoweredOn = true
@@ -202,6 +225,7 @@ final class TagController: ObservableObject {
   }
 
   private func bluetoothLost(_ reason: String) {
+    guard !isDemoMode else { return }
     centralPoweredOn = false
     isScanning = false
     discoveredTags.removeAll()
@@ -363,7 +387,7 @@ final class TagController: ObservableObject {
   // MARK: - Haptics & LEDs
 
   var canBuzz: Bool {
-    currentTag?.gearComponent?.capabilities.contains(.haptic) == true
+    isDemoMode || currentTag?.gearComponent?.capabilities.contains(.haptic) == true
   }
 
   /// Plays a named haptic + light signature on the jacket.
@@ -382,6 +406,7 @@ final class TagController: ObservableObject {
   /// Vibrates the sleeve. Returns false when no haptic-capable gear is attached.
   @discardableResult
   func buzz(_ note: HapticNote) -> Bool {
+    if isDemoMode { return true }
     guard let tag = currentTag, let gear = tag.gearComponent, gear.capabilities.contains(.haptic),
       let request = try? PlayHapticCommand(frame: note.frame, component: gear)
     else { return false }
@@ -392,6 +417,7 @@ final class TagController: ObservableObject {
   /// Flashes the LED on the tag (the jacket itself has no LED).
   @discardableResult
   func flash(_ colors: [RGB], frameMs: Int = 180, totalMs: Int? = nil) -> Bool {
+    if isDemoMode { return true }
     guard let tag = currentTag else { return false }
     let frames = (colors + [.off]).map {
       PlayLEDPatternCommand.Frame(
@@ -420,6 +446,10 @@ final class TagController: ObservableObject {
   }
 
   func rename(_ name: String) {
+    if isDemoMode {
+      tagName = name
+      return
+    }
     guard let tag = currentTag, let publisher = try? tag.setName(name) else { return }
     fireAndForget(publisher)
   }

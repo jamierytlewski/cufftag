@@ -113,19 +113,42 @@ final class ActionPerformer: ObservableObject {
     switch action.kind {
     case .none:
       break
-    case .playPause:
-      media.playPause()
-      signature = media.isPlaying ? .play : .pause
-      confirm(media.isPlaying ? "Playing" : "Paused")
-    case .next:
-      media.next()
-    case .previous:
-      media.previous()
+    case .playPause, .next, .previous:
+      if media.activeSource == .applePodcasts {
+        let shortcutName: String?
+        switch action.kind {
+        case .playPause: shortcutName = media.externalPlayPauseShortcut
+        case .next: shortcutName = media.externalSkipForwardShortcut
+        default: shortcutName = media.externalSkipBackShortcut
+        }
+        guard let shortcutName else {
+          reportShortcutProblem("Enter the exact name of your \(action.kind.title) Shortcut in Settings.")
+          return
+        }
+        runShortcut(
+          GestureAction(kind: .runShortcut, parameter: shortcutName, returnToCuffTag: true),
+          signalOnSuccess: settings.hapticConfirmation && gesture != nil)
+        return
+      }
+      do {
+        switch action.kind {
+        case .playPause:
+          try media.playPause()
+          signature = media.isPlaying ? .play : .pause
+          confirm(media.isPlaying ? "Playing" : "Paused")
+        case .next: try media.next()
+        default: try media.previous()
+        }
+      } catch {
+        reportShortcutProblem(error.localizedDescription)
+        return
+      }
     case .nextEpisode:
-      media.nextEpisode()
-      if let episode = media.player.episode { confirm("Next up: \(episode.title)") }
+      reportShortcutProblem("Next episode used the retired CuffTag player. Assign your own Apple Podcasts Shortcut in Gestures instead.")
+      return
     case .bookmark:
-      bookmark()
+      reportShortcutProblem("CuffTag cannot bookmark Apple Podcasts. Change this mapping in Gestures; your library stays in Apple Podcasts.")
+      return
     case .volumeUp:
       volume.change(by: 0.0625)
     case .volumeDown:
@@ -150,7 +173,7 @@ final class ActionPerformer: ObservableObject {
       if UIApplication.shared.applicationState == .active {
         cameraRequested = true
       } else {
-        speech.speak("Open CuffTag to use the camera.")
+        postCameraNotification()
       }
     case .nextProfile:
       let profile = settings.cycleProfile()
@@ -175,6 +198,30 @@ final class ActionPerformer: ObservableObject {
 
   private func confirm(_ text: String) {
     if settings.spokenConfirmation { speech.speak(text) }
+  }
+
+  private func postCameraNotification() {
+    cameraRequested = true
+    Task {
+      let center = UNUserNotificationCenter.current()
+      let notificationSettings = await center.notificationSettings()
+      if [.authorized, .provisional, .ephemeral].contains(notificationSettings.authorizationStatus) {
+        let content = UNMutableNotificationContent()
+        content.title = "Open Sleeve Camera"
+        content.body = "Tap to open the camera — then Double tap or Cover your cuff to take a photo."
+        content.interruptionLevel = .timeSensitive
+        content.sound = .default
+        content.userInfo = ["openCamera": true]
+        let request = UNNotificationRequest(identifier: "sleeve-camera", content: content, trigger: nil)
+        do {
+          try await center.add(request)
+        } catch {
+          reportShortcutProblem("Couldn't show the camera notification: \(error.localizedDescription)")
+        }
+      } else {
+        speech.speak("Tap CuffTag to open the camera.")
+      }
+    }
   }
 
   private func callWebhook(_ urlString: String) {

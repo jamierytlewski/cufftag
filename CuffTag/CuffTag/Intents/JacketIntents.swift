@@ -10,6 +10,12 @@ struct JacketUnreachable: Error, CustomLocalizedStringResourceConvertible {
   }
 }
 
+struct LegacyPodcastPlayerUnavailable: Error, CustomLocalizedStringResourceConvertible {
+  var localizedStringResource: LocalizedStringResource {
+    "CuffTag now keeps your library in Apple Podcasts. Use Apple's playback actions in Shortcuts instead of the old CuffTag player."
+  }
+}
+
 @MainActor
 private func connectedServices() async throws -> AppServices {
   let services = AppServices.shared
@@ -232,7 +238,7 @@ struct SetProfileIntent: AppIntent {
 struct OpenSleeveCameraIntent: AppIntent {
   static var title: LocalizedStringResource = "Open Sleeve Camera"
   static var description = IntentDescription(
-    "Open the camera with your sleeve as the shutter: double tap for a photo, brush in to flip, brush out for video, cover for the timer.")
+    "Open the camera with your sleeve as the shutter: double tap for a photo, cover for a 3s countdown photo, brush in to flip, brush out for video.")
   static var openAppWhenRun = true
 
   @MainActor
@@ -246,7 +252,8 @@ struct OpenSleeveCameraIntent: AppIntent {
 
 struct PodcastControlIntent: AudioPlaybackIntent {
   static var title: LocalizedStringResource = "Control Podcast"
-  static var description = IntentDescription("Control CuffTag's built-in podcast player.")
+  static var description = IntentDescription("Legacy CuffTag player action. Use Apple Podcasts playback actions in Shortcuts instead.")
+  static var isDiscoverable = false
   static var openAppWhenRun = false
 
   @Parameter(title: "Command", default: .playPause) var command: PodcastCommand
@@ -256,6 +263,7 @@ struct PodcastControlIntent: AudioPlaybackIntent {
   @MainActor
   func perform() async throws -> some IntentResult {
     let services = AppServices.shared
+    guard services.media.activeSource == .podcasts else { throw LegacyPodcastPlayerUnavailable() }
     let player = services.player
     services.media.activeSource = .podcasts
     switch command {
@@ -279,6 +287,7 @@ struct PlayLatestEpisodeIntent: AudioPlaybackIntent {
   static var description = IntentDescription(
     "Play the newest unplayed episode, optionally from a specific show.")
   static var openAppWhenRun = false
+  static var isDiscoverable = false
 
   @Parameter(title: "Show name") var show: String?
 
@@ -287,6 +296,7 @@ struct PlayLatestEpisodeIntent: AudioPlaybackIntent {
   @MainActor
   func perform() async throws -> some IntentResult & ProvidesDialog {
     let services = AppServices.shared
+    guard services.media.activeSource == .podcasts else { throw LegacyPodcastPlayerUnavailable() }
     await services.podcasts.refreshIfStale()
     let candidates = services.podcasts.upNext.filter { episode in
       guard let show, !show.isEmpty else { return true }
@@ -321,14 +331,6 @@ struct JacquardShortcuts: AppShortcutsProvider {
       intent: OpenSleeveCameraIntent(),
       phrases: ["Open \(.applicationName) camera", "Take a photo with \(.applicationName)"],
       shortTitle: "Sleeve Camera", systemImageName: "camera.fill")
-    AppShortcut(
-      intent: PlayLatestEpisodeIntent(),
-      phrases: ["Play the latest podcast in \(.applicationName)"],
-      shortTitle: "Latest Episode", systemImageName: "mic.fill")
-    AppShortcut(
-      intent: PodcastControlIntent(),
-      phrases: ["Control podcast in \(.applicationName)"],
-      shortTitle: "Podcast Control", systemImageName: "playpause.fill")
     AppShortcut(
       intent: SetProfileIntent(),
       phrases: ["Switch \(.applicationName) profile", "Change \(.applicationName) gestures"],

@@ -192,10 +192,10 @@ struct GestureProfile: Codable, Identifiable, Equatable {
       key(.doubleTap): .init(kind: .playPause),
       key(.brushIn): .init(kind: .next),
       key(.brushOut): .init(kind: .previous),
-      key(.shortCover): .init(kind: .speakNowPlaying),
+      key(.shortCover): .init(kind: .speakTime),
     ],
     shifted: [
-      key(.doubleTap): .init(kind: .bookmark),
+      key(.doubleTap): .init(kind: .speakBattery),
       key(.brushIn): .init(kind: .volumeUp),
       key(.brushOut): .init(kind: .volumeDown),
     ])
@@ -209,7 +209,7 @@ struct GestureProfile: Codable, Identifiable, Equatable {
       key(.shortCover): .init(kind: .speakTime),
     ],
     shifted: [
-      key(.doubleTap): .init(kind: .speakNowPlaying),
+      key(.doubleTap): .init(kind: .speakTime),
       key(.brushIn): .init(kind: .next),
       key(.brushOut): .init(kind: .previous),
     ])

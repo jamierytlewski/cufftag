@@ -31,12 +31,28 @@ struct SettingsView: View {
 
         Section {
           Picker("Media gestures control", selection: $media.activeSource) {
-            ForEach(MediaSource.allCases) { source in
+            ForEach(MediaSource.selectableSources) { source in
               Label(source.title, systemImage: source.systemImage).tag(source)
             }
           }
+          if media.activeSource == .applePodcasts {
+            ApplePodcastsShortcutFields()
+              .textInputAutocapitalization(.never)
+              .autocorrectionDisabled()
+            Button {
+              UIApplication.shared.open(URL(string: "shortcuts://")!)
+            } label: {
+              Label("Open Shortcuts", systemImage: "square.2.layers.3d.fill")
+            }
+          }
+        } header: {
+          Text("Media & Apple Podcasts")
         } footer: {
-          Text("Switches automatically to whatever you last played. Apple Podcasts and Spotify can't be controlled by other apps on iOS — that's why CuffTag has its own podcast player.")
+          if media.activeSource == .applePodcasts {
+            Text("Create and test Play / Pause, Skip 30s and Back 15s Shortcuts in Apple's Shortcuts app, then enter their exact names here. CuffTag opens Shortcuts to request playback actions; it cannot control Apple Podcasts directly or verify completion. In the background or while locked, tap the notification and unlock if asked.")
+          } else {
+            Text("Apple Music uses its system player. Choose Apple Podcasts via Shortcuts to request actions from your own tested Shortcuts. Your podcast library stays in Apple Podcasts.")
+          }
         }
 
         Section {
@@ -78,6 +94,29 @@ struct SettingsView: View {
       .fullScreenCover(isPresented: $showIntroduction) {
         OnboardingView { showIntroduction = false }
       }
+    }
+  }
+}
+
+struct ApplePodcastsShortcutFields: View {
+  @EnvironmentObject private var media: MediaRouter
+
+  var body: some View {
+    VStack(alignment: .leading, spacing: 6) {
+      Text("Play / Pause").font(.subheadline.weight(.semibold))
+      TextField("Exact Shortcut name", text: $media.applePodcastsPlayPauseShortcut)
+        .accessibilityLabel("Play / Pause Shortcut")
+        .accessibilityHint("Enter the exact name of your tested Play / Pause Shortcut.")
+    }
+    VStack(alignment: .leading, spacing: 6) {
+      Text("Skip 30 seconds").font(.subheadline.weight(.semibold))
+      TextField("Exact Shortcut name", text: $media.applePodcastsSkipForwardShortcut)
+        .accessibilityLabel("Skip 30s Shortcut")
+    }
+    VStack(alignment: .leading, spacing: 6) {
+      Text("Back 15 seconds").font(.subheadline.weight(.semibold))
+      TextField("Exact Shortcut name", text: $media.applePodcastsSkipBackShortcut)
+        .accessibilityLabel("Back 15s Shortcut")
     }
   }
 }

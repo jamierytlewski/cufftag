@@ -24,6 +24,7 @@ final class SleeveCamera: NSObject, ObservableObject {
   @Published private(set) var isCapturing = false
   @Published private(set) var isSaving = false
   @Published private(set) var hasPendingSave = false
+  @Published private(set) var isDemoPreview = false
   @Published var timer: Timer = .off
 
   let session = AVCaptureSession()
@@ -43,9 +44,22 @@ final class SleeveCamera: NSObject, ObservableObject {
     self.tag = tag
   }
 
+  func enableDemoPreview(thumbnail: UIImage?) {
+    isDemoPreview = true
+    isRunning = true
+    problem = nil
+    timer = .three
+    lastThumbnail = thumbnail
+  }
+
   // MARK: Lifecycle
 
   func start() async {
+    if isDemoPreview {
+      problem = nil
+      isRunning = true
+      return
+    }
     problem = nil
     guard await Self.requestAccess(.video) else {
       problem = "Camera access is off. Enable it in Settings › CuffTag."
@@ -91,6 +105,11 @@ final class SleeveCamera: NSObject, ObservableObject {
   func stop() {
     countdownTask?.cancel()
     countdown = nil
+    if isDemoPreview {
+      isRecording = false
+      recordingStarted = nil
+      return
+    }
     if isRecording { movieOutput.stopRecording() }
     queue.async { [session] in session.stopRunning() }
     isRunning = false
@@ -99,14 +118,18 @@ final class SleeveCamera: NSObject, ObservableObject {
   // MARK: Sleeve gestures
 
   /// Returns true if the camera consumed the gesture.
+  /// - Double tap: Instant shutter (or uses the selected timer if enabled).
+  /// - Cover: Starts a 3-second sleeve LED + haptic countdown and snaps a photo so you have time to drop your hand.
+  /// - Brush in: Flips front/back camera.
+  /// - Brush out: Starts or stops video recording.
   func handle(_ gesture: JQGesture) -> Bool {
     switch gesture {
     case .doubleTap: shutter()
     case .brushIn: flip()
     case .brushOut: toggleRecording()
     case .shortCover:
-      timer = timer.next
-      tag.signal(timer == .off ? .back : .confirm)
+      let seconds = timer == .off ? Timer.three.rawValue : timer.rawValue
+      shutter(countdownSeconds: seconds)
     default: return false
     }
     return true
@@ -114,7 +137,7 @@ final class SleeveCamera: NSObject, ObservableObject {
 
   // MARK: Actions
 
-  func shutter() {
+  func shutter(countdownSeconds: Int? = nil) {
     guard isRunning, !isCapturing, !isRecording, !hasPendingSave else { return }
     if countdown != nil {
       countdownTask?.cancel()
@@ -122,10 +145,11 @@ final class SleeveCamera: NSObject, ObservableObject {
       tag.signal(.pause)
       return
     }
-    guard timer != .off else { return capturePhoto() }
+    let seconds = countdownSeconds ?? timer.rawValue
+    guard seconds > 0 else { return capturePhoto() }
     countdownTask = Task { [weak self] in
       guard let self else { return }
-      for remaining in stride(from: self.timer.rawValue, to: 0, by: -1) {
+      for remaining in stride(from: seconds, to: 0, by: -1) {
         self.countdown = remaining
         self.tag.flash(remaining <= 3 ? [.red] : [.amber], frameMs: 150)
         if remaining <= 3 { self.tag.buzz(.tick) }
@@ -139,6 +163,11 @@ final class SleeveCamera: NSObject, ObservableObject {
 
   func capturePhoto() {
     guard isRunning, !isCapturing, !isRecording, !hasPendingSave else { return }
+    if isDemoPreview {
+      flashTick += 1
+      tag.signal(.confirm)
+      return
+    }
     guard photoOutput.connection(with: .video)?.isActive == true else {
       problem = "The camera isn't ready to take a photo. Try again."
       return
@@ -154,6 +183,11 @@ final class SleeveCamera: NSObject, ObservableObject {
   func flip() {
     guard isRunning, !isRecording, !isCapturing, countdown == nil else { return }
     let newPosition: AVCaptureDevice.Position = position == .back ? .front : .back
+    if isDemoPreview {
+      position = newPosition
+      tag.signal(.skip)
+      return
+    }
     queue.async { [session, weak self] in
       guard let device = Self.device(newPosition),
         let input = try? AVCaptureDeviceInput(device: device)
@@ -187,6 +221,12 @@ final class SleeveCamera: NSObject, ObservableObject {
 
   func toggleRecording() {
     guard isRunning, !isCapturing, !hasPendingSave, countdown == nil else { return }
+    if isDemoPreview {
+      isRecording.toggle()
+      recordingStarted = isRecording ? Date() : nil
+      tag.signal(isRecording ? .play : .pause)
+      return
+    }
     if isRecording {
       movieOutput.stopRecording()
       tag.signal(.pause)

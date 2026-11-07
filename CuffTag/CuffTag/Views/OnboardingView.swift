@@ -219,7 +219,7 @@ struct OnboardingView: View {
         .multilineTextAlignment(.center).padding(.horizontal, 24)
         .accessibilityAddTraits(.isHeader)
       VStack(alignment: .leading, spacing: 14) {
-        tip("hand.raised.fill", "Cover is your shift key", "Cover, then brush in or out, for volume. Cover + double tap bookmarks a podcast moment.")
+        tip("hand.raised.fill", "Cover is your shift key", "Cover, then brush in or out, for volume. The initial Cover + double tap mapping says your jacket battery; saved profiles keep their mappings.")
         tip("camera.fill", "Sleeve Camera", "Prop up your phone, double tap your cuff to take the shot.")
         tip("bell.badge.fill", "Bring back Alerts", "The Alerts tab shows how to make your sleeve buzz for the people who matter.")
       }

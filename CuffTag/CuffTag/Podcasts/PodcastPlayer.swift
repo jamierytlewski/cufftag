@@ -14,7 +14,7 @@ final class PodcastPlayer: ObservableObject {
   @Published var rate: Float {
     didSet {
       UserDefaults.standard.set(rate, forKey: "playbackRate")
-      if isPlaying { player.rate = rate }
+      if isPlaying && !isDemoMode { player.rate = rate }
       updateNowPlaying()
     }
   }
@@ -28,8 +28,9 @@ final class PodcastPlayer: ObservableObject {
   private var bag = Set<AnyCancellable>()
   private var itemBag = Set<AnyCancellable>()
   private var lastSavedTime: Double = 0
+  private var isDemoMode = false
 
-  init(store: PodcastStore) {
+  init(store: PodcastStore, restorePlayback: Bool = true) {
     self.store = store
     let savedRate = UserDefaults.standard.float(forKey: "playbackRate")
     rate = savedRate > 0 ? savedRate : 1.0
@@ -65,13 +66,30 @@ final class PodcastPlayer: ObservableObject {
       }
       .store(in: &bag)
 
-    setupRemoteCommands()
+    if restorePlayback { setupRemoteCommands() }
 
-    if let lastID = UserDefaults.standard.string(forKey: "lastEpisodeID"),
+    if restorePlayback, let lastID = UserDefaults.standard.string(forKey: "lastEpisodeID"),
       let last = store.episode(id: lastID)
     {
       load(last)
     }
+  }
+
+  func loadDemoEpisode(
+    _ episode: Episode,
+    currentTime: Double,
+    duration: Double,
+    isPlaying: Bool,
+    artwork: UIImage?
+  ) {
+    isDemoMode = true
+    itemBag.removeAll()
+    self.episode = episode
+    self.currentTime = currentTime
+    self.duration = duration
+    self.isPlaying = isPlaying
+    self.artwork = artwork
+    updateNowPlaying()
   }
 
   // MARK: - Transport
@@ -82,6 +100,17 @@ final class PodcastPlayer: ObservableObject {
       return
     }
     saveProgress()
+    if isDemoMode {
+      self.episode = episode
+      self.duration = episode.duration ?? 2400
+      self.currentTime = store.progress[episode.id] ?? 0
+      self.isPlaying = true
+      if let url = episode.artworkURL {
+        self.artwork = UIImage(contentsOfFile: url.path)
+      }
+      updateNowPlaying()
+      return
+    }
     load(episode)
     play()
   }
@@ -91,6 +120,11 @@ final class PodcastPlayer: ObservableObject {
       if let next = store.inProgress.first ?? store.upNext.first { play(next) }
       return
     }
+    if isDemoMode {
+      isPlaying = true
+      updateNowPlaying()
+      return
+    }
     activateSession()
     player.playImmediately(atRate: rate)
     isPlaying = true
@@ -98,7 +132,7 @@ final class PodcastPlayer: ObservableObject {
   }
 
   func pause() {
-    player.pause()
+    if !isDemoMode { player.pause() }
     isPlaying = false
     saveProgress()
     updateNowPlaying()
@@ -116,6 +150,11 @@ final class PodcastPlayer: ObservableObject {
     let upper = duration > 0 ? duration - 1 : seconds
     let target = min(max(seconds, 0), max(upper, 0))
     currentTime = target
+    if isDemoMode {
+      saveProgress()
+      updateNowPlaying()
+      return
+    }
     player.seek(to: CMTime(seconds: target, preferredTimescale: 600)) { [weak self] _ in
       MainActor.assumeIsolated {
         self?.saveProgress()
@@ -168,7 +207,7 @@ final class PodcastPlayer: ObservableObject {
   }
 
   private func tick(_ seconds: Double) {
-    guard seconds.isFinite, episode != nil else { return }
+    guard !isDemoMode, seconds.isFinite, episode != nil else { return }
     currentTime = seconds
     if abs(seconds - lastSavedTime) > 10 { saveProgress() }
   }

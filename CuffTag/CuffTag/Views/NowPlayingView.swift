@@ -53,6 +53,7 @@ struct MiniPlayer: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Now playing: \(episode.title), \(episode.podcastTitle)")
+        .accessibilityIdentifier("open-now-playing")
         .accessibilityHint("Opens the full player")
         HStack(spacing: 8) {
           Button { player.togglePlayPause() } label: {

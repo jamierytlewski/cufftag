@@ -3,15 +3,14 @@ import SwiftUI
 struct RootView: View {
   @EnvironmentObject private var tag: TagController
   @EnvironmentObject private var performer: ActionPerformer
-  @EnvironmentObject private var camera: SleeveCamera
-  @Environment(\.volumeController) private var volume
+  @ObservedObject var camera: SleeveCamera
   @AppStorage("onboarded") private var onboarded = false
   @State private var tab = Tab.jacket
 
   enum Tab: Hashable { case jacket, gestures, alerts, podcasts }
 
   var body: some View {
-    ZStack {
+    Group {
       if onboarded {
         TabView(selection: $tab) {
           JacketView()
@@ -23,7 +22,7 @@ struct RootView: View {
           AlertsView()
             .tabItem { Label("Alerts", systemImage: "bell.badge.waveform.fill") }
             .tag(Tab.alerts)
-          PodcastsView()
+          ApplePodcastsView()
             .tabItem { Label("Podcasts", systemImage: "mic.fill") }
             .tag(Tab.podcasts)
         }
@@ -32,11 +31,15 @@ struct RootView: View {
         OnboardingView { withAnimation(.easeInOut(duration: 0.6)) { onboarded = true } }
           .transition(.opacity)
       }
-      if let volume { HiddenVolumeView(controller: volume).frame(width: 1, height: 1).opacity(0.01) }
     }
     .tint(Theme.copperLight)
     .preferredColorScheme(.dark)
-    .onAppear { if tag.savedTagID != nil { onboarded = true } }
+    .onAppear {
+      let args = ProcessInfo.processInfo.arguments
+      let forceOnboarding = args.contains("-onboarded")
+        && (args.firstIndex(of: "-onboarded").map { $0 + 1 < args.count && args[$0 + 1].uppercased() == "NO" } ?? false)
+      if tag.savedTagID != nil && !forceOnboarding { onboarded = true }
+    }
     .onOpenURL(perform: handle)
     .alert("Shortcut needs attention", isPresented: Binding(
       get: { performer.problem != nil },

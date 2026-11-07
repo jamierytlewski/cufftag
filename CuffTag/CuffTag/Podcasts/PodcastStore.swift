@@ -20,6 +20,7 @@ final class PodcastStore: ObservableObject {
   @Published private(set) var played: Set<String> = []
   @Published private(set) var isRefreshing = false
   @Published private(set) var bookmarks: [Bookmark] = []
+  private var isDemoMode = false
 
   private struct Listening: Codable {
     var progress: [String: Double]
@@ -53,6 +54,18 @@ final class PodcastStore: ObservableObject {
     {
       bookmarks = saved
     }
+  }
+
+  func loadDemoCatalog(
+    podcasts: [Podcast],
+    progress: [String: Double],
+    bookmarks: [Bookmark]
+  ) {
+    isDemoMode = true
+    self.podcasts = podcasts
+    self.progress = progress
+    self.played = []
+    self.bookmarks = bookmarks
   }
 
   // MARK: - Queries
@@ -115,6 +128,7 @@ final class PodcastStore: ObservableObject {
   }
 
   func refresh(_ podcast: Podcast) async {
+    guard !isDemoMode else { return }
     guard let updated = try? await fetch(feedURL: podcast.feedURL),
       let index = podcasts.firstIndex(where: { $0.id == podcast.id })
     else { return }
@@ -123,7 +137,7 @@ final class PodcastStore: ObservableObject {
   }
 
   func refreshAll() async {
-    guard !isRefreshing else { return }
+    guard !isDemoMode, !isRefreshing else { return }
     isRefreshing = true
     defer { isRefreshing = false }
     await withTaskGroup(of: Void.self) { group in
@@ -134,6 +148,7 @@ final class PodcastStore: ObservableObject {
   }
 
   func refreshIfStale() async {
+    guard !isDemoMode else { return }
     let stale = podcasts.contains { ($0.lastRefreshed ?? .distantPast) < Date().addingTimeInterval(-3600) }
     if stale { await refreshAll() }
   }
@@ -179,7 +194,7 @@ final class PodcastStore: ObservableObject {
 
   func setProgress(_ seconds: Double, for episode: Episode) {
     progress[episode.id] = seconds
-    saveListening()
+    if !isDemoMode { saveListening() }
   }
 
   func setPlayed(_ isPlayed: Bool, for episode: Episode) {
@@ -189,7 +204,7 @@ final class PodcastStore: ObservableObject {
     } else {
       played.remove(episode.id)
     }
-    saveListening()
+    if !isDemoMode { saveListening() }
   }
 
   // MARK: - Bookmarks
@@ -200,13 +215,13 @@ final class PodcastStore: ObservableObject {
       episodeID: episode.id, episodeTitle: episode.title, podcastTitle: episode.podcastTitle,
       artworkURL: episode.artworkURL, seconds: seconds)
     bookmarks.insert(bookmark, at: 0)
-    saveBookmarks()
+    if !isDemoMode { saveBookmarks() }
     return bookmark
   }
 
   func removeBookmark(_ bookmark: Bookmark) {
     bookmarks.removeAll { $0.id == bookmark.id }
-    saveBookmarks()
+    if !isDemoMode { saveBookmarks() }
   }
 
   private func saveBookmarks() {
@@ -216,6 +231,7 @@ final class PodcastStore: ObservableObject {
   }
 
   private func savePodcasts() {
+    guard !isDemoMode else { return }
     if let data = try? JSONEncoder().encode(podcasts) {
       try? data.write(to: podcastsFile, options: .atomic)
     }
